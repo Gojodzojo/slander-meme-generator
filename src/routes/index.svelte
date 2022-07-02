@@ -2,6 +2,9 @@
 	import 'carbon-components-svelte/css/g100.css';
 	import { Button } from 'carbon-components-svelte';
 	import { Tile } from 'carbon-components-svelte';
+	import { createDefaultFilmData, type FilmData } from 'src/types/FilmData';
+
+	const filmData: FilmData = createDefaultFilmData();
 </script>
 
 <svelte:head>
@@ -11,8 +14,8 @@
 <main>
 	<span class="title">Slander meme generator</span>
 	<div class="step-buttons">
-		<Button>1. Pick the music</Button>
-		<Button>2. Add scenes</Button>
+		<Button>1. Add scenes</Button>
+		<Button>2. Pick the music</Button>
 		<Button>3. Download the file</Button>
 	</div>
 	<div class="step-container">
