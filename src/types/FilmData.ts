@@ -1,5 +1,5 @@
 export const PREUPLOADED_MUSIC_FILES = [
-    "Powerpuff girls theme song"
+    "The Powerpuff Girls theme song"
 ] as const
 
 export type PreuploadedMusicFilesType = (typeof PREUPLOADED_MUSIC_FILES)[number]
@@ -50,7 +50,7 @@ export function createDefaultFilmData(): FilmData {
 		outputFileFormat: "mp4",
 		scenes: [],
 		musicSettings: {
-			music: "Powerpuff girls theme song",
+			music: "The Powerpuff Girls theme song",
 			startTime: null,
 			endTime: null,
 		}
