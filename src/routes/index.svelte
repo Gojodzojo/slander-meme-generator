@@ -2,9 +2,10 @@
 	import 'carbon-components-svelte/css/g100.css';
 	import { Button } from 'carbon-components-svelte';
 	import { Tile } from 'carbon-components-svelte';
-	import { createDefaultFilmData, type FilmData } from 'src/types/FilmData';
+	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
+	import EditScenes from '../components/EditScenes/EditScenes.svelte';
 
-	const filmData: FilmData = createDefaultFilmData();
+	let filmData: FilmData = createDefaultFilmData();
 </script>
 
 <svelte:head>
@@ -14,12 +15,14 @@
 <main>
 	<span class="title">Slander meme generator</span>
 	<div class="step-buttons">
-		<Button>1. Add scenes</Button>
+		<Button>1. Edit scenes</Button>
 		<Button>2. Pick the music</Button>
 		<Button>3. Download the file</Button>
 	</div>
 	<div class="step-container">
-		<Tile class="step" />
+		<Tile class="step">
+			<EditScenes bind:scenes={filmData.scenes} />
+		</Tile>
 	</div>
 </main>
 
@@ -54,7 +57,7 @@
 		justify-content: space-between;
 	}
 
-	:global(.step-buttons > button) {
+	.step-buttons > :global(button) {
 		width: calc((100% - 40px) / 3);
 	}
 
@@ -67,9 +70,18 @@
 		align-items: center;
 	}
 
-	:global(.step) {
+	main :global(.step) {
 		height: calc(100% - 40px);
 		width: calc(100% - 40px);
 		max-width: 700px;
+		overflow: auto;
+	}
+
+	main :global(.step)::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	main :global(.step)::-webkit-scrollbar-thumb {
+		background-color: #aaaaaa;
 	}
 </style>

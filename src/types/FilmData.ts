@@ -5,7 +5,8 @@ export const PREUPLOADED_MUSIC_FILES = [
 export type PreuploadedMusicFilesType = (typeof PREUPLOADED_MUSIC_FILES)[number]
 
 export const PREUPLOADED_VIDEO_FILES = [
-    
+   "Ibai Llanos Explaining Things", 
+   "Black Man Crying"
 ] as const
 
 export type PreuploadedVideoFilesType = (typeof PREUPLOADED_VIDEO_FILES)[number]
@@ -43,10 +44,10 @@ export interface FilmData {
     scenes: Scene[]
 }
 
-export function createDefaultFilmData() {
+export function createDefaultFilmData(): FilmData {
     return {
 		name: "slander-meme",
-		fileFormat: "mp4",
+		outputFileFormat: "mp4",
 		scenes: [],
 		musicSettings: {
 			music: "Powerpuff girls theme song",
@@ -54,4 +55,22 @@ export function createDefaultFilmData() {
 			endTime: null,
 		}
 	}
+}
+
+export function createDefaultScene(): Scene {
+    return {
+        startTime: null,
+        endTime: null,
+        video: "Ibai Llanos Explaining Things",
+        topTextSettings: {
+            font: "",
+            fontSize: 12,
+            text: ""
+        },
+        bottomTextSettings: {
+            font: "",
+            fontSize: 12,
+            text: ""
+        }
+    }
 }
