@@ -19,7 +19,6 @@ export type OutputFileFormatsType = (typeof OUTPUT_FILE_FORMATS)[number]
 
 export interface TextSettings {
     text: string
-    font: string
     fontSize: number
 }
 
@@ -27,6 +26,7 @@ export interface Scene {
     video: File | PreuploadedVideoFilesType
     startTime: string | null
     endTime: string | null
+    speed: number
     topTextSettings: TextSettings
     bottomTextSettings: TextSettings
 }
@@ -61,14 +61,13 @@ export function createDefaultScene(): Scene {
     return {
         startTime: null,
         endTime: null,
+        speed: 1,
         video: "Ibai Llanos Explaining Things",
         topTextSettings: {
-            font: "",
             fontSize: 12,
             text: ""
         },
         bottomTextSettings: {
-            font: "",
             fontSize: 12,
             text: ""
         }
