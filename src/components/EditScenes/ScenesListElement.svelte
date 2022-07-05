@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { PreuploadedVideoFilesType, Scene } from '../../types/FilmData';
+	import type { Scene } from '../../types/FilmData';
 	import { ExpandableTile } from 'carbon-components-svelte';
 	import VideoPreview from './VideoPreview.svelte';
 	import VideoSelector from './VideoSelector.svelte';
+	import SceneStartStopSelector from './SceneStartStopSelector.svelte';
 
 	export let scene: Scene;
 	export let sceneNumber: number;
@@ -16,6 +17,7 @@
 		<div slot="below" class="below" on:click={(e) => e.stopPropagation()} title="">
 			<VideoPreview {videoFile} />
 			<VideoSelector bind:video={scene.video} bind:videoFile />
+			<SceneStartStopSelector bind:scene {videoFile} />
 		</div>
 	</ExpandableTile>
 </div>

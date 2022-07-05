@@ -24,8 +24,8 @@ export interface TextSettings {
 
 export interface Scene {
     video: File | PreuploadedVideoFilesType
-    startTime: string | null
-    endTime: string | null
+    startTime: number
+    endTime: number
     speed: number
     topTextSettings: TextSettings
     bottomTextSettings: TextSettings
@@ -59,8 +59,8 @@ export function createDefaultFilmData(): FilmData {
 
 export function createDefaultScene(): Scene {
     return {
-        startTime: null,
-        endTime: null,
+        startTime: 0,
+        endTime: 0,
         speed: 1,
         video: "Ibai Llanos Explaining Things",
         topTextSettings: {
