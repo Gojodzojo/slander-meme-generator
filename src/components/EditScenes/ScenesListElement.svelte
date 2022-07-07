@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Scene } from '../../types/FilmData';
-	import { ExpandableTile, TextInput, NumberInput } from 'carbon-components-svelte';
+	import { ExpandableTile, NumberInput } from 'carbon-components-svelte';
 	import VideoPreview from './VideoPreview.svelte';
 	import VideoSelector from './VideoSelector.svelte';
 	import SceneStartStopSelector from './SceneStartStopSelector.svelte';
@@ -19,6 +19,7 @@
 			<VideoPreview {videoFile} />
 			<VideoSelector bind:video={scene.video} bind:videoFile />
 			<SceneStartStopSelector bind:scene {videoFile} />
+			<NumberInput bind:value={scene.speed} label="Video speed" min={0.00001} step={0.1} />
 			<SceneTextInput
 				bind:textSettings={scene.topTextSettings}
 				labelText="Top text"
