@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { Scene } from '../../types/FilmData';
 	import DoubleRangeSlider from './DoubleRangeSlider.svelte';
+	import type { VideoFileType } from './ScenesListElement.svelte';
 
 	export let scene: Scene;
-	export let videoFile: File | 'Loading video' | 'Loading video error' | 'Video not selected';
+	export let videoFile: VideoFileType;
 
 	let videoDuration = 0;
 	$: updateVideoDuration(videoFile);
@@ -14,9 +15,7 @@
 	$: scene.startTime = rangeStart * videoDuration;
 	$: scene.endTime = rangeEnd * videoDuration;
 
-	function updateVideoDuration(
-		videoFile: File | 'Loading video' | 'Loading video error' | 'Video not selected'
-	) {
+	function updateVideoDuration(videoFile: VideoFileType) {
 		rangeStart = 0;
 		rangeEnd = 1;
 

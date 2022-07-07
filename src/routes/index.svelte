@@ -4,8 +4,20 @@
 	import { Tile } from 'carbon-components-svelte';
 	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
+	import AdjustSettings from '../components/AdjustSettings/AdjustSettings.svelte';
+
+	enum Step {
+		EditScenes,
+		AdjustSettings,
+		RenderTheVider
+	}
 
 	let filmData: FilmData = createDefaultFilmData();
+	let currentStep: Step = Step.EditScenes;
+
+	function setStep(newStep: Step) {
+		return () => (currentStep = newStep);
+	}
 </script>
 
 <svelte:head>
@@ -15,13 +27,17 @@
 <main>
 	<span class="title">Slander meme generator</span>
 	<div class="step-buttons">
-		<Button>1. Edit scenes</Button>
-		<Button>2. Pick the music</Button>
-		<Button>3. Download the file</Button>
+		<Button on:click={setStep(Step.EditScenes)}>1. Edit scenes</Button>
+		<Button on:click={setStep(Step.AdjustSettings)}>2. Adjust settings</Button>
+		<Button on:click={setStep(Step.RenderTheVider)}>3. Render the video</Button>
 	</div>
 	<div class="step-container">
 		<Tile class="step">
-			<EditScenes bind:scenes={filmData.scenes} />
+			{#if currentStep === Step.EditScenes}
+				<EditScenes bind:scenes={filmData.scenes} />
+			{:else if currentStep === Step.AdjustSettings}
+				<AdjustSettings bind:filmData />
+			{:else}{/if}
 		</Tile>
 	</div>
 </main>
