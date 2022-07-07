@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Scene } from '../../types/FilmData';
-	import { ExpandableTile, NumberInput } from 'carbon-components-svelte';
+	import { Button, ExpandableTile, NumberInput } from 'carbon-components-svelte';
 	import VideoPreview from './VideoPreview.svelte';
 	import VideoSelector from './VideoSelector.svelte';
 	import SceneStartStopSelector from './SceneStartStopSelector.svelte';
@@ -8,6 +8,7 @@
 
 	export let scene: Scene;
 	export let sceneNumber: number;
+	export let deleteScene: () => void;
 
 	let videoFile: File | 'Loading video' | 'Loading video error' | 'Video not selected';
 </script>
@@ -30,6 +31,9 @@
 				labelText="Bottom text"
 				placeholder="Enter bottom text..."
 			/>
+			<div class="delete-scene-button-container">
+				<Button kind="danger-ghost" on:click={deleteScene}>Delete scene</Button>
+			</div>
 		</div>
 	</ExpandableTile>
 </div>
@@ -43,5 +47,12 @@
 		padding-bottom: 30px;
 		padding-top: 16px;
 		cursor: default;
+	}
+
+	.scene-list-element :global(.delete-scene-button-container) {
+		margin-top: 16px;
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
 	}
 </style>

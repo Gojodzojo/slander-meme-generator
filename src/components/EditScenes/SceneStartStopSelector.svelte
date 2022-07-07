@@ -61,6 +61,7 @@
 	.scene-start-stop-selector {
 		width: 100%;
 		display: flex;
+		margin-bottom: 16px;
 	}
 
 	.slider-container {

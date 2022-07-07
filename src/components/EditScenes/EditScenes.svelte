@@ -8,11 +8,15 @@
 	function addScene() {
 		scenes = [...scenes, createDefaultScene()];
 	}
+
+	function deleteScene(scene: Scene) {
+		return () => (scenes = scenes.filter((s) => s !== scene));
+	}
 </script>
 
 <div class="edit-scenes">
 	{#each scenes as scene, sceneIndex (scene)}
-		<ScenesListElement bind:scene sceneNumber={sceneIndex + 1} />
+		<ScenesListElement bind:scene sceneNumber={sceneIndex + 1} deleteScene={deleteScene(scene)} />
 	{/each}
 	<Button class="add-scene-button" on:click={addScene}>Add scene</Button>
 </div>
