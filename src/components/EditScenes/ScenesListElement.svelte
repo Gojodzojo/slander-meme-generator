@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { Scene } from '../../types/FilmData';
-	import { ExpandableTile } from 'carbon-components-svelte';
+	import { ExpandableTile, TextInput, NumberInput } from 'carbon-components-svelte';
 	import VideoPreview from './VideoPreview.svelte';
 	import VideoSelector from './VideoSelector.svelte';
 	import SceneStartStopSelector from './SceneStartStopSelector.svelte';
+	import SceneTextInput from './SceneTextInput.svelte';
 
 	export let scene: Scene;
 	export let sceneNumber: number;
@@ -18,6 +19,16 @@
 			<VideoPreview {videoFile} />
 			<VideoSelector bind:video={scene.video} bind:videoFile />
 			<SceneStartStopSelector bind:scene {videoFile} />
+			<SceneTextInput
+				bind:textSettings={scene.topTextSettings}
+				labelText="Top text"
+				placeholder="Enter top text..."
+			/>
+			<SceneTextInput
+				bind:textSettings={scene.bottomTextSettings}
+				labelText="Bottom text"
+				placeholder="Enter bottom text..."
+			/>
 		</div>
 	</ExpandableTile>
 </div>
