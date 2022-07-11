@@ -1,21 +1,12 @@
 <script lang="ts">
-	import { Loading } from 'carbon-components-svelte';
-	export let videoFile: File | 'Loading' | 'Loading error' | 'File not selected';
+	export let videoFile: File;
 
-	$: videoSrc = typeof videoFile === 'object' ? URL.createObjectURL(videoFile) : '';
+	$: videoSrc = URL.createObjectURL(videoFile);
 </script>
 
 <div class="video-preview">
-	{#if typeof videoFile !== 'string'}
-		<!-- svelte-ignore a11y-media-has-caption -->
-		<video src={videoSrc} controls />
-	{:else if videoFile === 'Loading'}
-		<Loading withOverlay={false} />
-	{:else if videoFile === 'Loading error'}
-		Could not load the video
-	{:else}
-		Select a video file
-	{/if}
+	<!-- svelte-ignore a11y-media-has-caption -->
+	<video src={videoSrc} controls />
 </div>
 
 <style>

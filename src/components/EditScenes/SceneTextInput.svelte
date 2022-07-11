@@ -8,7 +8,7 @@
 </script>
 
 <div class="scene-text-input">
-	<TextInput {labelText} {placeholder} />
+	<TextInput value={textSettings.text} {labelText} {placeholder} />
 	<div class="font-size-input-container">
 		<NumberInput label="Font size" value={textSettings.fontSize} min={1} />
 	</div>

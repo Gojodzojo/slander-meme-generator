@@ -16,7 +16,16 @@
 
 <div class="edit-scenes">
 	{#each scenes as scene, sceneIndex (scene)}
-		<ScenesListElement bind:scene sceneNumber={sceneIndex + 1} deleteScene={deleteScene(scene)} />
+		<ScenesListElement
+			bind:video={scene.video}
+			bind:videoSpeed={scene.speed}
+			bind:videoStartTime={scene.startTime}
+			bind:videoEndTime={scene.endTime}
+			bind:topTextSettings={scene.topTextSettings}
+			bind:bottomTextSettings={scene.bottomTextSettings}
+			sceneNumber={sceneIndex + 1}
+			deleteScene={deleteScene(scene)}
+		/>
 	{/each}
 	<Button class="add-scene-button" on:click={addScene}>Add scene</Button>
 </div>

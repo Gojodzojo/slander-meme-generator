@@ -1,37 +1,23 @@
 <script lang="ts">
-	import type { Scene } from '../../types/FilmData';
 	import DoubleRangeSlider from './DoubleRangeSlider.svelte';
-	import type { VideoFileType } from './ScenesListElement.svelte';
 
-	export let scene: Scene;
-	export let videoFile: VideoFileType;
-
-	let videoDuration = 0;
-	$: updateVideoDuration(videoFile);
+	export let start: number;
+	export let end: number;
+	export let duration: number;
 
 	let rangeStart = 0;
 	let rangeEnd = 1;
 
-	$: scene.startTime = rangeStart * videoDuration;
-	$: scene.endTime = rangeEnd * videoDuration;
+	$: changeDuration(duration);
+	$: start = rangeStart * duration;
+	$: end = rangeEnd * duration;
 
-	function updateVideoDuration(videoFile: VideoFileType) {
-		rangeStart = 0;
-		rangeEnd = 1;
+	function changeDuration(duration: number) {
+		rangeStart = start / duration;
+		rangeEnd = end / duration;
 
-		if (typeof videoFile !== 'object') {
-			videoDuration = 0;
-			return;
-		}
-
-		const videoElement = document.createElement('video');
-		videoElement.preload = 'metadata';
-
-		videoElement.onloadedmetadata = function () {
-			videoDuration = videoElement.duration;
-		};
-
-		videoElement.src = URL.createObjectURL(videoFile);
+		if (rangeStart > 1) rangeStart = 1;
+		if (rangeEnd > 1) rangeEnd = 1;
 	}
 
 	function secsToMinsAndSecs(s: number) {
@@ -49,11 +35,11 @@
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label class="bx--label">Pick start and end time of video</label>
 <div class="scene-start-stop-selector">
-	{secsToMinsAndSecs(scene.startTime)}
+	{secsToMinsAndSecs(start)}
 	<div class="slider-container">
 		<DoubleRangeSlider bind:start={rangeStart} bind:end={rangeEnd} />
 	</div>
-	{secsToMinsAndSecs(scene.endTime)}
+	{secsToMinsAndSecs(end)}
 </div>
 
 <style>
