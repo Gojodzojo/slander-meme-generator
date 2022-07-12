@@ -26,11 +26,11 @@ async function getMediaFile<T extends string>(
     return await preuploadedMediaGetter(media);    
 }
 
-async function getVideoFile(video: File | PreuploadedVideoFilesType) {
+export async function getVideoFile(video: File | PreuploadedVideoFilesType) {
     return await getMediaFile(video, getPreuploadedVideo)
 }
 
-async function getMusicFile(music: File | PreuploadedMusicFilesType, ) {
+export async function getMusicFile(music: File | PreuploadedMusicFilesType, ) {
     return await getMediaFile(music, getPreuploadedMusic)
 }
 

@@ -38,7 +38,7 @@ export interface MusicSettings {
 }
 
 export interface FilmData {
-    fileName: string
+    outputFileName: string
     outputFileFormat: OutputFileFormatsType
     musicSettings: MusicSettings
     scenes: Scene[]
@@ -46,7 +46,7 @@ export interface FilmData {
 
 export function createDefaultFilmData(): FilmData {
     return {
-		fileName: "slander-meme",
+		outputFileName: "slander-meme",
 		outputFileFormat: "mp4",
 		scenes: [],
 		musicSettings: {

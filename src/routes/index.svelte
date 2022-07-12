@@ -5,12 +5,23 @@
 	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
 	import AdjustSettings from '../components/AdjustSettings/AdjustSettings.svelte';
+	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
+	import { createFFmpeg } from '@ffmpeg/ffmpeg';
+	import { onMount } from 'svelte';
 
 	enum Step {
 		EditScenes,
 		AdjustSettings,
-		RenderTheVider
+		RenderTheVideo
 	}
+
+	const ffmpeg = createFFmpeg({ log: true });
+	let isFFmpegLoaded = false;
+
+	onMount(async () => {
+		await ffmpeg.load();
+		isFFmpegLoaded = true;
+	});
 
 	let filmData: FilmData = createDefaultFilmData();
 	let currentStep: Step = Step.EditScenes;
@@ -29,7 +40,7 @@
 	<div class="step-buttons">
 		<Button on:click={setStep(Step.EditScenes)}>1. Edit scenes</Button>
 		<Button on:click={setStep(Step.AdjustSettings)}>2. Adjust settings</Button>
-		<Button on:click={setStep(Step.RenderTheVider)}>3. Render the video</Button>
+		<Button on:click={setStep(Step.RenderTheVideo)}>3. Render the video</Button>
 	</div>
 	<div class="step-container">
 		<Tile class="step">
@@ -37,11 +48,13 @@
 				<EditScenes bind:scenes={filmData.scenes} />
 			{:else if currentStep === Step.AdjustSettings}
 				<AdjustSettings
-					bind:fileName={filmData.fileName}
+					bind:fileName={filmData.outputFileName}
 					bind:outputFileFormat={filmData.outputFileFormat}
 					bind:musicSettings={filmData.musicSettings}
 				/>
-			{:else}{/if}
+			{:else}
+				<RenderTheVideo {filmData} {ffmpeg} {isFFmpegLoaded} />
+			{/if}
 		</Tile>
 	</div>
 </main>
