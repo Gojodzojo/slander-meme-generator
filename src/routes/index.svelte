@@ -36,7 +36,11 @@
 			{#if currentStep === Step.EditScenes}
 				<EditScenes bind:scenes={filmData.scenes} />
 			{:else if currentStep === Step.AdjustSettings}
-				<AdjustSettings bind:filmData />
+				<AdjustSettings
+					bind:fileName={filmData.fileName}
+					bind:outputFileFormat={filmData.outputFileFormat}
+					bind:musicSettings={filmData.musicSettings}
+				/>
 			{:else}{/if}
 		</Tile>
 	</div>

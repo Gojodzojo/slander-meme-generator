@@ -1,20 +1,35 @@
 <script lang="ts">
-	import { PREUPLOADED_MUSIC_FILES, type FilmData } from '../../types/FilmData';
-	import MediaSelector, { MediaStatus } from '../MediaSelector.svelte';
+	import {
+		type MusicSettings,
+		type OutputFileFormatsType,
+		OUTPUT_FILE_FORMATS
+	} from '../../types/FilmData';
+	import { Select, SelectItem, TextInput, Tile } from 'carbon-components-svelte';
+	import AdjustMusicSettings from './AdjustMusicSettings.svelte';
 
-	export let filmData: FilmData;
-
-	let musicFileStatus: MediaStatus = MediaStatus.Ok;
+	export let fileName: string;
+	export let outputFileFormat: OutputFileFormatsType;
+	export let musicSettings: MusicSettings;
 </script>
 
 <div class="adjust-settings">
-	<MediaSelector
-		bind:media={filmData.musicSettings.music}
-		bind:status={musicFileStatus}
-		mediaType="music"
-		acceptedFileTypes={['audio/*']}
-		preuploadedFileNames={PREUPLOADED_MUSIC_FILES}
-	/>
+	<Tile light>
+		<div class="output-file-settings">
+			<TextInput bind:value={fileName} labelText="File name" placeholder="Enter file name..." />
+			<div class="extension-input-container">
+				<Select bind:value={outputFileFormat} labelText="File extension">
+					{#each OUTPUT_FILE_FORMATS as format}
+						<SelectItem text={format} value={format} />
+					{/each}
+				</Select>
+			</div>
+		</div>
+		<AdjustMusicSettings
+			bind:music={musicSettings.music}
+			bind:startTime={musicSettings.startTime}
+			bind:endTime={musicSettings.endTime}
+		/>
+	</Tile>
 </div>
 
 <style>

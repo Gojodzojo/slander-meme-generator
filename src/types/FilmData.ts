@@ -33,12 +33,12 @@ export interface Scene {
 
 export interface MusicSettings {
     music: File | PreuploadedMusicFilesType
-    startTime: string | null
-    endTime: string | null
+    startTime: number
+    endTime: number
 }
 
 export interface FilmData {
-    name: string
+    fileName: string
     outputFileFormat: OutputFileFormatsType
     musicSettings: MusicSettings
     scenes: Scene[]
@@ -46,13 +46,13 @@ export interface FilmData {
 
 export function createDefaultFilmData(): FilmData {
     return {
-		name: "slander-meme",
+		fileName: "slander-meme",
 		outputFileFormat: "mp4",
 		scenes: [],
 		musicSettings: {
 			music: "The Powerpuff Girls theme song",
-			startTime: null,
-			endTime: null,
+			startTime: 0,
+			endTime: 0,
 		}
 	}
 }
