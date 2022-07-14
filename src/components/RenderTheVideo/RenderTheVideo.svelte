@@ -40,7 +40,10 @@
 			setsar=1/1,
 			drawtext=fontfile=impact.ttf:text='${bottomTextSettings.text}':fontcolor=white:fontsize=${
 					bottomTextSettings.fontSize
-				}:borderw=5:x=(w-text_w)/2:y=(h-text_h)/2,
+				}:borderw=5:x=(w-text_w)/2:y=(h-text_h) - ${bottomTextSettings.fontSize / 2},
+			drawtext=fontfile=impact.ttf:text='${topTextSettings.text}':fontcolor=white:fontsize=${
+					topTextSettings.fontSize
+				}:borderw=5:x=(w-text_w)/2:y=${topTextSettings.fontSize / 2},
 			trim=${startTime}:${endTime},
 			setpts=${1 / speed}*(PTS-STARTPTS)[v${index}];`;
 			}
