@@ -15,15 +15,49 @@
 	ffmpeg.setProgress(({ ratio }) => (percent = ratio * 100));
 
 	async function render() {
-		if (!isFFmpegLoaded) return;
-		isRendering = true;
-
 		const { outputFileName, outputFileFormat, musicSettings, scenes } = filmData;
-		const fullOutputFileName = `${outputFileName}.${outputFileFormat}`;
 
-		const vid = await getVideoFile(scenes[0].video);
-		ffmpeg.FS('writeFile', vid.name, await fetchFile(vid));
-		await ffmpeg.run('-i', vid.name, fullOutputFileName);
+		if (!isFFmpegLoaded && outputFileName !== '' && scenes.length !== 0) return;
+		isRendering = true;
+		percent = 0;
+
+		let inputFiles = new Array<string>(scenes.length * 2);
+		let filters = new Array<string>(scenes.length);
+		let concatTracks = new Array<string>(scenes.length);
+
+		const videoWritePromises = scenes.map(
+			async ({ video, startTime, endTime, speed, bottomTextSettings, topTextSettings }, index) => {
+				const videoFile = await getVideoFile(video);
+				const fileExtension = videoFile.name.split('.').pop()!;
+				const newFileName = `${index}.${fileExtension}`;
+				ffmpeg.FS('writeFile', newFileName, await fetchFile(videoFile));
+				inputFiles[index * 2] = '-i';
+				inputFiles[index * 2 + 1] = newFileName;
+				concatTracks[index] = `[v${index}]`;
+				filters[index] = `[${index}:v]
+			scale=640:480:force_original_aspect_ratio=decrease,
+			pad=640:480:(ow-iw)/2:(oh-ih)/2,
+			setsar=1/1,
+			drawtext=fontfile=impact.ttf:text='${'bottomTextSettings.text'}':fontcolor=white:fontsize=${
+					bottomTextSettings.fontSize
+				}:borderw=5:x=(w-text_w)/2:y=(h-text_h)/2,
+			trim=${startTime}:${endTime},
+			setpts=${1 / speed}*(PTS-STARTPTS)[v${index}];`;
+			}
+		);
+		await Promise.all(videoWritePromises);
+
+		const fullOutputFileName = `${outputFileName}.${outputFileFormat}`;
+		await ffmpeg.run(
+			...inputFiles,
+			'-filter_complex',
+			`${filters.join(' ')}
+			${concatTracks.join('')}
+			concat=n=${filmData.scenes.length}:v=1:a=0 [v]`,
+			'-map',
+			'[v]',
+			fullOutputFileName
+		);
 		const data = ffmpeg.FS('readFile', fullOutputFileName);
 		videoSrc = URL.createObjectURL(new Blob([data.buffer], { type: `video/${outputFileFormat}` }));
 		isRendering = false;

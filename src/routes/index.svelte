@@ -6,7 +6,7 @@
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
 	import AdjustSettings from '../components/AdjustSettings/AdjustSettings.svelte';
 	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
-	import { createFFmpeg } from '@ffmpeg/ffmpeg';
+	import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { onMount } from 'svelte';
 
 	enum Step {
@@ -20,6 +20,7 @@
 
 	onMount(async () => {
 		await ffmpeg.load();
+		ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('fonts/impact.ttf'));
 		isFFmpegLoaded = true;
 	});
 
