@@ -2,15 +2,16 @@
 	import { TextInput, NumberInput } from 'carbon-components-svelte';
 	import type { TextSettings } from '../../types/FilmData';
 
-	export let textSettings: TextSettings;
+	export let fontSize: number;
+	export let text: string;
 	export let labelText: string;
 	export let placeholder: string;
 </script>
 
 <div class="scene-text-input">
-	<TextInput value={textSettings.text} {labelText} {placeholder} />
+	<TextInput bind:value={text} {labelText} {placeholder} />
 	<div class="font-size-input-container">
-		<NumberInput label="Font size" value={textSettings.fontSize} min={1} />
+		<NumberInput label="Font size" bind:value={fontSize} min={1} />
 	</div>
 </div>
 

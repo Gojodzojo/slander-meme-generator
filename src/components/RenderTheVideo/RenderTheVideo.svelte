@@ -38,7 +38,7 @@
 			scale=640:480:force_original_aspect_ratio=decrease,
 			pad=640:480:(ow-iw)/2:(oh-ih)/2,
 			setsar=1/1,
-			drawtext=fontfile=impact.ttf:text='${'bottomTextSettings.text'}':fontcolor=white:fontsize=${
+			drawtext=fontfile=impact.ttf:text='${bottomTextSettings.text}':fontcolor=white:fontsize=${
 					bottomTextSettings.fontSize
 				}:borderw=5:x=(w-text_w)/2:y=(h-text_h)/2,
 			trim=${startTime}:${endTime},

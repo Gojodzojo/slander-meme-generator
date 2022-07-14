@@ -52,12 +52,14 @@
 							/>
 							<NumberInput bind:value={videoSpeed} label="Video speed" min={0.00001} step={0.1} />
 							<SceneTextInput
-								bind:textSettings={topTextSettings}
+								bind:fontSize={topTextSettings.fontSize}
+								bind:text={topTextSettings.text}
 								labelText="Top text"
 								placeholder="Enter top text..."
 							/>
 							<SceneTextInput
-								bind:textSettings={bottomTextSettings}
+								bind:fontSize={bottomTextSettings.fontSize}
+								bind:text={bottomTextSettings.text}
 								labelText="Bottom text"
 								placeholder="Enter bottom text..."
 							/>
