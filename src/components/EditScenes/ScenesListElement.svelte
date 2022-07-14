@@ -7,7 +7,7 @@
 		type TextSettings
 	} from '../../types/FilmData';
 	import { Button, ExpandableTile, Loading, NumberInput } from 'carbon-components-svelte';
-	import VideoPreview from './VideoPreview.svelte';
+	import VideoPreview from '../VideoPreview.svelte';
 	import SceneStartStopSelector from '../SceneStartStopSelector.svelte';
 	import SceneTextInput from './SceneTextInput.svelte';
 	import MediaSelector, { MediaStatus } from '../MediaSelector.svelte';
@@ -44,7 +44,7 @@
 						<Loading withOverlay={false} />
 					{:then [videoFile, videoDuration]}
 						<div style="width: 100%; height: 100%;">
-							<VideoPreview {videoFile} />
+							<VideoPreview videoSrc={URL.createObjectURL(videoFile)} />
 							<SceneStartStopSelector
 								bind:start={videoStartTime}
 								bind:end={videoEndTime}

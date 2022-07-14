@@ -1,7 +1,5 @@
 <script lang="ts">
-	export let videoFile: File;
-
-	$: videoSrc = URL.createObjectURL(videoFile);
+	export let videoSrc: string;
 </script>
 
 <div class="video-preview">

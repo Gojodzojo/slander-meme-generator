@@ -3,6 +3,7 @@
 	import type { FilmData } from '../../types/FilmData';
 	import { type FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { getVideoFile } from '../../scripts/fileGetters';
+	import VideoPreview from '../VideoPreview.svelte';
 
 	export let filmData: FilmData;
 	export let ffmpeg: FFmpeg;
@@ -79,8 +80,7 @@
 			{:else if videoSrc === ''}
 				Waiting for rendering
 			{:else}
-				<!-- svelte-ignore a11y-media-has-caption -->
-				<video src={videoSrc} controls />
+				<VideoPreview {videoSrc} />
 			{/if}
 		</div>
 	</Tile>
