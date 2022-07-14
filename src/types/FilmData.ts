@@ -40,6 +40,8 @@ export interface MusicSettings {
 export interface FilmData {
     outputFileName: string
     outputFileFormat: OutputFileFormatsType
+    filmWidth: number
+    filmHeight: number
     musicSettings: MusicSettings
     scenes: Scene[]
 }
@@ -48,6 +50,8 @@ export function createDefaultFilmData(): FilmData {
     return {
 		outputFileName: "slander-meme",
 		outputFileFormat: "mp4",
+        filmWidth: 1920,
+        filmHeight: 1080,
 		scenes: [],
 		musicSettings: {
 			music: "The Powerpuff Girls theme song",

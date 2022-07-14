@@ -52,6 +52,8 @@
 					bind:fileName={filmData.outputFileName}
 					bind:outputFileFormat={filmData.outputFileFormat}
 					bind:musicSettings={filmData.musicSettings}
+					bind:filmWidth={filmData.filmWidth}
+					bind:filmHeight={filmData.filmHeight}
 				/>
 			{:else}
 				<RenderTheVideo {filmData} {ffmpeg} {isFFmpegLoaded} />

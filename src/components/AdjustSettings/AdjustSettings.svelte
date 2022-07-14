@@ -4,12 +4,14 @@
 		type OutputFileFormatsType,
 		OUTPUT_FILE_FORMATS
 	} from '../../types/FilmData';
-	import { Select, SelectItem, TextInput, Tile } from 'carbon-components-svelte';
+	import { NumberInput, Select, SelectItem, TextInput, Tile } from 'carbon-components-svelte';
 	import AdjustMusicSettings from './AdjustMusicSettings.svelte';
 
 	export let fileName: string;
 	export let outputFileFormat: OutputFileFormatsType;
 	export let musicSettings: MusicSettings;
+	export let filmWidth: number;
+	export let filmHeight: number;
 </script>
 
 <div class="adjust-settings">
@@ -17,7 +19,7 @@
 		<div class="output-file-settings">
 			<TextInput bind:value={fileName} labelText="File name" placeholder="Enter file name..." />
 			<div class="extension-input-container">
-				<Select bind:value={outputFileFormat} labelText="File extension">
+				<Select bind:selected={outputFileFormat} labelText="File extension">
 					{#each OUTPUT_FILE_FORMATS as format}
 						<SelectItem text={format} value={format} />
 					{/each}
@@ -29,6 +31,8 @@
 			bind:startTime={musicSettings.startTime}
 			bind:endTime={musicSettings.endTime}
 		/>
+		<NumberInput bind:value={filmWidth} min={1} label={'Film width'} />
+		<NumberInput bind:value={filmHeight} min={1} label={'Film height'} />
 	</Tile>
 </div>
 

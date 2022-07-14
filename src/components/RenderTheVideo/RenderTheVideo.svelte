@@ -15,7 +15,8 @@
 	ffmpeg.setProgress(({ ratio }) => (percent = ratio * 100));
 
 	async function render() {
-		const { outputFileName, outputFileFormat, musicSettings, scenes } = filmData;
+		const { outputFileName, outputFileFormat, musicSettings, scenes, filmWidth, filmHeight } =
+			filmData;
 
 		if (!isFFmpegLoaded && outputFileName !== '' && scenes.length !== 0) return;
 		isRendering = true;
@@ -35,8 +36,8 @@
 				inputFiles[index * 2 + 1] = newFileName;
 				concatTracks[index] = `[v${index}]`;
 				filters[index] = `[${index}:v]
-			scale=640:480:force_original_aspect_ratio=decrease,
-			pad=640:480:(ow-iw)/2:(oh-ih)/2,
+			scale=${filmWidth}:${filmHeight}:force_original_aspect_ratio=decrease,
+			pad=${filmWidth}:${filmHeight}:(ow-iw)/2:(oh-ih)/2,
 			setsar=1/1,
 			drawtext=fontfile=impact.ttf:text='${bottomTextSettings.text}':fontcolor=white:fontsize=${
 					bottomTextSettings.fontSize
