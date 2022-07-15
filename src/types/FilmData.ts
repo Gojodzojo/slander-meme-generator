@@ -33,8 +33,7 @@ export interface Scene {
 
 export interface MusicSettings {
     music: File | PreuploadedMusicFilesType
-    startTime: number
-    endTime: number
+    speed: number
 }
 
 export interface FilmData {
@@ -50,13 +49,12 @@ export function createDefaultFilmData(): FilmData {
     return {
 		outputFileName: "slander-meme",
 		outputFileFormat: "mp4",
-        filmWidth: 1920,
-        filmHeight: 1080,
+        filmWidth: 640,
+        filmHeight: 480,
 		scenes: [],
 		musicSettings: {
 			music: "The Powerpuff Girls theme song",
-			startTime: 0,
-			endTime: 0,
+            speed: 1
 		}
 	}
 }
@@ -64,15 +62,15 @@ export function createDefaultFilmData(): FilmData {
 export function createDefaultScene(): Scene {
     return {
         startTime: 0,
-        endTime: 0,
-        speed: 1,
+        endTime: 10,
+        speed: 2,
         video: "Ibai Llanos Explaining Things",
         topTextSettings: {
-            fontSize: 12,
+            fontSize: 50,
             text: ""
         },
         bottomTextSettings: {
-            fontSize: 12,
+            fontSize: 50,
             text: ""
         }
     }
