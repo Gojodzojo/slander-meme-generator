@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
 import crossOriginIsolation from 'vite-plugin-cross-origin-isolation'
 
@@ -10,6 +10,9 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
+		prerender: {
+			default: true
+		},
 		vite: {
 			plugins: [
 				crossOriginIsolation()
