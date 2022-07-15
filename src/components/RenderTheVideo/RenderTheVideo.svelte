@@ -2,7 +2,7 @@
 	import { Button, Tile } from 'carbon-components-svelte';
 	import type { FilmData } from '../../types/FilmData';
 	import { type FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-	import { getVideoFile } from '../../scripts/fileGetters';
+	import { getMusicFile, getVideoFile } from '../../scripts/fileGetters';
 	import VideoPreview from '../VideoPreview.svelte';
 
 	export let filmData: FilmData;
@@ -52,6 +52,12 @@
 		);
 		await Promise.all(videoWritePromises);
 
+		const musicFile = await getMusicFile(musicSettings.music);
+		const fileExtension = musicFile.name.split('.').pop()!;
+		const musicFileName = `m.${fileExtension}`;
+		ffmpeg.FS('writeFile', musicFileName, await fetchFile(musicFile));
+		inputFiles.push('-i', musicFileName);
+
 		const fullOutputFileName = `${outputFileName}.${outputFileFormat}`;
 		await ffmpeg.run(
 			...inputFiles,
@@ -59,8 +65,13 @@
 			`${filters.join(' ')}
 			${concatTracks.join('')}
 			concat=n=${filmData.scenes.length}:v=1:a=0 [v]`,
+			'-filter_complex',
+			`[${scenes.length}:a] apad [a]`,
 			'-map',
 			'[v]',
+			'-map',
+			'[a]',
+			'-shortest',
 			fullOutputFileName
 		);
 		const data = ffmpeg.FS('readFile', fullOutputFileName);

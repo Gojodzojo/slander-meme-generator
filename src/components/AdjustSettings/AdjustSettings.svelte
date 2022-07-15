@@ -26,13 +26,9 @@
 				</Select>
 			</div>
 		</div>
-		<AdjustMusicSettings
-			bind:music={musicSettings.music}
-			bind:startTime={musicSettings.startTime}
-			bind:endTime={musicSettings.endTime}
-		/>
 		<NumberInput bind:value={filmWidth} min={1} label={'Film width'} />
 		<NumberInput bind:value={filmHeight} min={1} label={'Film height'} />
+		<AdjustMusicSettings bind:music={musicSettings.music} />
 	</Tile>
 </div>
 

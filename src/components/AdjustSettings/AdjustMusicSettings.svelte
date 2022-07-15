@@ -9,8 +9,6 @@
 	import MusicPreview from './MusicPreview.svelte';
 
 	export let music: File | PreuploadedMusicFilesType;
-	export let startTime: number;
-	export let endTime: number;
 
 	let musicFileStatus: MediaStatus = MediaStatus.Ok;
 </script>
@@ -32,11 +30,6 @@
 			{:then [musicFile, musicDuration]}
 				<div style="width:100%; height: 100%;">
 					<MusicPreview {musicFile} />
-					<SceneStartStopSelector
-						bind:start={startTime}
-						bind:end={endTime}
-						duration={musicDuration}
-					/>
 				</div>
 			{/await}
 		{/if}
