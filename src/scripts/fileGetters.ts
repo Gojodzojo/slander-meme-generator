@@ -2,7 +2,7 @@ import type {  PreuploadedMusicFilesType, PreuploadedVideoFilesType } from "../t
 
 async function getPreuploadedFile(preuploadedFileName: string, fileDirectory: string, fileExtension: string, fileType: string) {
     const fileName = `${preuploadedFileName.split(' ').join('_')}.${fileExtension}`;
-    const resp = await fetch(`/${fileDirectory}/${fileName}`);
+    const resp = await fetch(`./${fileDirectory}/${fileName}`);
     const blob = await resp.blob();
     return new File([blob], fileName, { type: fileType });
 }

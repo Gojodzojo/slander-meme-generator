@@ -20,7 +20,7 @@
 
 	onMount(async () => {
 		await ffmpeg.load();
-		ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('fonts/impact.ttf'));
+		ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
 		isFFmpegLoaded = true;
 	});
 
