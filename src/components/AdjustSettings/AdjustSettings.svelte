@@ -28,7 +28,7 @@
 		</div>
 		<NumberInput bind:value={filmWidth} min={1} label={'Film width'} />
 		<NumberInput bind:value={filmHeight} min={1} label={'Film height'} />
-		<AdjustMusicSettings bind:music={musicSettings.music} />
+		<AdjustMusicSettings bind:music={musicSettings.music} bind:musicSpeed={musicSettings.speed} />
 	</Tile>
 </div>
 

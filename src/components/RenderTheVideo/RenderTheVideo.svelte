@@ -66,7 +66,7 @@
 			${concatTracks.join('')}
 			concat=n=${filmData.scenes.length}:v=1:a=0 [v]`,
 			'-filter_complex',
-			`[${scenes.length}:a] apad [a]`,
+			`[${scenes.length}:a] atempo=${musicSettings.speed} [a]`,
 			'-map',
 			'[v]',
 			'-map',
