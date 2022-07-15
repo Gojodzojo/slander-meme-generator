@@ -17,6 +17,9 @@ const config = {
 			plugins: [
 				crossOriginIsolation()
 			]
+		},
+		paths: {
+			base: '/slander-meme-generator'
 		}
 	}
 };
