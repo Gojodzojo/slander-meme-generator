@@ -55,6 +55,7 @@
 	.file-selector {
 		display: flex;
 		align-items: flex-start;
+		margin-bottom: 16px;
 	}
 
 	.file-selector :global(.bx--btn) {
