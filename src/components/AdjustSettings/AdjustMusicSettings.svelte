@@ -3,7 +3,10 @@
 <script lang="ts">
 	import { Loading, NumberInput } from 'carbon-components-svelte';
 	import { getMusicFile } from '../../scripts/fileGetters';
-	import { PREUPLOADED_MUSIC_FILES, type PreuploadedMusicFilesType } from '../../types/FilmData';
+	import {
+		PREUPLOADED_MUSIC_FILES,
+		type PreuploadedMusicFilesType
+	} from '../../types/FilmData';
 	import MediaSelector, { MediaStatus } from '../MediaSelector.svelte';
 	import MusicPreview from './MusicPreview.svelte';
 
@@ -30,7 +33,12 @@
 			{:then musicFile}
 				<div style="width:100%; height: 100%;">
 					<MusicPreview {musicFile} />
-					<NumberInput bind:value={musicSpeed} label="Music speed" step={0.1} min={0.5} />
+					<NumberInput
+						bind:value={musicSpeed}
+						label="Music speed"
+						step={0.1}
+						min={0.5}
+					/>
 				</div>
 			{/await}
 		{/if}
@@ -41,9 +49,13 @@
 	.music-controls {
 		width: 100%;
 		/* height: 132px; */
-		margin-top: 16px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	.music-controls :global(.bx--form-item) {
+		margin-top: 16px;
+		margin-bottom: 0 !important;
 	}
 </style>
