@@ -48,7 +48,7 @@
 <style>
 	.music-controls {
 		width: 100%;
-		/* height: 132px; */
+		height: 136px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
