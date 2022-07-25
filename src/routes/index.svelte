@@ -1,6 +1,6 @@
 <script lang="ts">
 	import 'carbon-components-svelte/css/g100.css';
-	import { Button } from 'carbon-components-svelte';
+	import { Button, ComposedModal, ModalBody, ModalHeader } from 'carbon-components-svelte';
 	import { Tile } from 'carbon-components-svelte';
 	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
@@ -17,11 +17,16 @@
 
 	const ffmpeg = createFFmpeg({ log: true });
 	let isFFmpegLoaded = false;
+	let FFmpegLoadFailed = false;
 
 	onMount(async () => {
-		await ffmpeg.load();
-		ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
-		isFFmpegLoaded = true;
+		try {
+			await ffmpeg.load();
+			ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
+			isFFmpegLoaded = true;
+		} catch {
+			FFmpegLoadFailed = true;
+		}
 	});
 
 	let filmData: FilmData = createDefaultFilmData();
@@ -37,6 +42,15 @@
 </svelte:head>
 
 <main>
+	<ComposedModal preventCloseOnClickOutside class="load-failed-modal" open={FFmpegLoadFailed}>
+		<ModalHeader title="App failed to load" />
+		<ModalBody>
+			Unfortunatelly your browser does not support the FFmpeg.wasm library which
+			is essential for this app to work.
+			<br />
+			Please try using other browser on a desktop computer.
+		</ModalBody>
+	</ComposedModal>
 	<span class="title">Slander meme generator</span>
 	<div class="step-buttons">
 		<Button on:click={setStep(Step.EditScenes)}>1. Edit scenes</Button>
@@ -119,5 +133,9 @@
 
 	main :global(.step)::-webkit-scrollbar-thumb {
 		background-color: #aaaaaa;
+	}
+
+	main :global(.load-failed-modal .bx--modal-close) {
+		display: none;
 	}
 </style>
