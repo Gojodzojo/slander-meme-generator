@@ -65,6 +65,15 @@
 
 	.adjust-settings :global(.settings-container) {
 		flex-grow: 1;
+		overflow: auto;
+	}
+
+	.adjust-settings :global(.settings-container::-webkit-scrollbar) {
+		width: 10px;
+	}
+
+	.adjust-settings :global(.settings-container::-webkit-scrollbar-thumb) {
+		background-color: #aaaaaa;
 	}
 
 	.step-buttons {
