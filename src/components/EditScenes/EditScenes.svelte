@@ -2,9 +2,11 @@
 	import { createDefaultScene, type Scene } from '../../types/FilmData';
 	import ScenesListElement from './ScenesListElement.svelte';
 	import { Button } from 'carbon-components-svelte';
+	import StepHeader from '../StepHeader.svelte';
+	import { Step } from '../../routes/index.svelte';
 
 	export let scenes: Scene[];
-	export let nextStep: () => void;
+	export let setStep: (newStep: Step) => void;
 
 	function addScene() {
 		scenes = [...scenes, createDefaultScene()];
@@ -13,11 +15,14 @@
 	function deleteScene(scene: Scene) {
 		return () => (scenes = scenes.filter((s) => s !== scene));
 	}
+
+	function nextStep() {
+		setStep(Step.AdjustSettings);
+	}
 </script>
 
 <div class="edit-scenes">
-	<h3>Add and edit scenes</h3>
-	<hr />
+	<StepHeader>Add and edit scenes</StepHeader>
 	<div class="scenes-list">
 		{#each scenes as scene, sceneIndex (scene)}
 			<ScenesListElement
@@ -65,9 +70,5 @@
 	.scenes-list::-webkit-scrollbar-thumb {
 		border-left: 10px #262626 solid;
 		background-color: #aaaaaa;
-	}
-
-	hr {
-		margin: 16px 0;
 	}
 </style>

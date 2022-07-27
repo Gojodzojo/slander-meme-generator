@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+	export enum Step {
+		EditScenes,
+		AdjustSettings,
+		RenderTheVideo
+	}
+</script>
+
 <script lang="ts">
 	import 'carbon-components-svelte/css/g100.css';
 	import { ComposedModal, ModalBody, ModalHeader } from 'carbon-components-svelte';
@@ -8,12 +16,6 @@
 	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
 	import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { onMount } from 'svelte';
-
-	enum Step {
-		EditScenes,
-		AdjustSettings,
-		RenderTheVideo
-	}
 
 	const ffmpeg = createFFmpeg({ log: true });
 	let isFFmpegLoaded = false;
@@ -33,7 +35,7 @@
 	let currentStep: Step = Step.EditScenes;
 
 	function setStep(newStep: Step) {
-		return () => (currentStep = newStep);
+		currentStep = newStep;
 	}
 </script>
 
@@ -56,10 +58,7 @@
 	<div class="step-container">
 		<Tile class="step">
 			{#if currentStep === Step.EditScenes}
-				<EditScenes
-					bind:scenes={filmData.scenes}
-					nextStep={setStep(Step.AdjustSettings)}
-				/>
+				<EditScenes bind:scenes={filmData.scenes} {setStep} />
 			{:else if currentStep === Step.AdjustSettings}
 				<AdjustSettings
 					bind:fileName={filmData.outputFileName}
@@ -67,6 +66,7 @@
 					bind:musicSettings={filmData.musicSettings}
 					bind:filmWidth={filmData.filmWidth}
 					bind:filmHeight={filmData.filmHeight}
+					{setStep}
 				/>
 			{:else}
 				<RenderTheVideo {filmData} {ffmpeg} {isFFmpegLoaded} />
