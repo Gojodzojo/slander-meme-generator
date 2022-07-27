@@ -44,13 +44,22 @@
 						<Loading withOverlay={false} />
 					{:then [videoFile, videoDuration]}
 						<div style="width: 100%; height: 100%;">
-							<VideoPreview videoSrc={URL.createObjectURL(videoFile)} />
+							<VideoPreview
+								videoSrc={URL.createObjectURL(
+									videoFile
+								)}
+							/>
 							<SceneStartStopSelector
 								bind:start={videoStartTime}
 								bind:end={videoEndTime}
 								duration={videoDuration}
 							/>
-							<NumberInput bind:value={videoSpeed} label="Video speed" min={0.00001} step={0.1} />
+							<NumberInput
+								bind:value={videoSpeed}
+								label="Video speed"
+								min={0.00001}
+								step={0.1}
+							/>
 							<SceneTextInput
 								bind:fontSize={topTextSettings.fontSize}
 								bind:text={topTextSettings.text}
@@ -70,7 +79,9 @@
 				{/if}
 			</div>
 			<div class="delete-scene-button-container">
-				<Button kind="danger-ghost" on:click={deleteScene}>Delete scene</Button>
+				<Button kind="danger-ghost" on:click={deleteScene}
+					>Delete scene</Button
+				>
 			</div>
 		</div>
 	</ExpandableTile>

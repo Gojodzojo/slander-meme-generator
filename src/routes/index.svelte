@@ -1,6 +1,6 @@
 <script lang="ts">
 	import 'carbon-components-svelte/css/g100.css';
-	import { Button, ComposedModal, ModalBody, ModalHeader } from 'carbon-components-svelte';
+	import { ComposedModal, ModalBody, ModalHeader } from 'carbon-components-svelte';
 	import { Tile } from 'carbon-components-svelte';
 	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
@@ -51,16 +51,15 @@
 			Please try using other browser on a desktop computer.
 		</ModalBody>
 	</ComposedModal>
+
 	<span class="title">Slander meme generator</span>
-	<div class="step-buttons">
-		<Button on:click={setStep(Step.EditScenes)}>1. Edit scenes</Button>
-		<Button on:click={setStep(Step.AdjustSettings)}>2. Adjust settings</Button>
-		<Button on:click={setStep(Step.RenderTheVideo)}>3. Render the video</Button>
-	</div>
 	<div class="step-container">
 		<Tile class="step">
 			{#if currentStep === Step.EditScenes}
-				<EditScenes bind:scenes={filmData.scenes} />
+				<EditScenes
+					bind:scenes={filmData.scenes}
+					nextStep={setStep(Step.AdjustSettings)}
+				/>
 			{:else if currentStep === Step.AdjustSettings}
 				<AdjustSettings
 					bind:fileName={filmData.outputFileName}
@@ -100,17 +99,6 @@
 		display: block;
 	}
 
-	.step-buttons {
-		display: flex;
-		width: calc(100% - 40px);
-		max-width: 700px;
-		justify-content: space-between;
-	}
-
-	.step-buttons > :global(button) {
-		width: calc((100% - 40px) / 3);
-	}
-
 	.step-container {
 		width: 100vw;
 		min-height: 0; /* https://stackoverflow.com/q/36247140/3597276 */
@@ -123,16 +111,7 @@
 	main :global(.step) {
 		height: calc(100% - 40px);
 		width: calc(100% - 40px);
-		max-width: 700px;
-		overflow: auto;
-	}
-
-	main :global(.step)::-webkit-scrollbar {
-		width: 10px;
-	}
-
-	main :global(.step)::-webkit-scrollbar-thumb {
-		background-color: #aaaaaa;
+		max-width: 900px;
 	}
 
 	main :global(.load-failed-modal .bx--modal-close) {
