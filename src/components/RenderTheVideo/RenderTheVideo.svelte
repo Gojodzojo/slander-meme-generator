@@ -2,10 +2,11 @@
 	import { Button, Tile } from 'carbon-components-svelte';
 	import { type FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { getMusicFile, getVideoFile } from '../../scripts/fileGetters';
-	import VideoPreview from '../VideoPreview.svelte';
 	import { filmSettings } from '../../stores/filmSettingsStore';
 	import { scenes } from '../../stores/scenesStore';
 	import { musicSettings } from '../../stores/musicSettingsStore';
+	import StepHeader from '../StepHeader.svelte';
+	import { currentStep, Step } from '../../stores/stepStore';
 
 	export let ffmpeg: FFmpeg;
 	export let isFFmpegLoaded: boolean;
@@ -19,6 +20,14 @@
 			percent = ratio * 100;
 		}
 	});
+
+	function previousStep() {
+		$currentStep = Step.AdjustSettings;
+	}
+
+	function nextStep() {
+		$currentStep = Step.DownloadTheVideo;
+	}
 
 	async function render() {
 		if (!isFFmpegLoaded && $filmSettings.outputFileName !== '' && $scenes.length !== 0)
@@ -98,52 +107,52 @@
 </script>
 
 <div class="render-the-video">
-	<Tile light>
-		<Button class="render-btn" on:click={render} disabled={isRendering}>
-			Render the video
-		</Button>
+	<StepHeader>Render the video</StepHeader>
 
-		<div class="video-container">
-			{#if !isFFmpegLoaded}
-				Loading FFmpeg
-			{:else if isRendering}
-				{percent.toFixed(0)}%
-			{:else if videoSrc === ''}
-				Waiting for rendering
-			{:else}
-				<VideoPreview {videoSrc} />
-			{/if}
-		</div>
-
-		<Button
-			class="download-btn"
-			href={videoSrc}
-			disabled={isRendering || videoSrc === ''}
-			download="{$filmSettings.outputFileName}.{$filmSettings.outputFileFormat}"
-		>
-			Download the video
-		</Button>
+	<Tile light class="rendering-status">
+		{#if !isFFmpegLoaded}
+			Loading FFmpeg
+		{:else if isRendering}
+			Rendering: {percent.toFixed(0)}%
+		{:else if videoSrc === ''}
+			<Button on:click={render}>Start rendering</Button>
+		{:else}
+			<div style="margin: 16px;">Video rendered successfully!</div>
+			<Button style="margin: 16px;" on:click={render}>Render agin</Button>
+		{/if}
 	</Tile>
+
+	<div class="step-buttons">
+		<Button kind="secondary" on:click={previousStep}>Go back</Button>
+		<Button on:click={nextStep}>Next step</Button>
+	</div>
 </div>
 
 <style>
-	.render-the-video :global(.render-btn) {
+	.render-the-video {
 		width: 100%;
-		max-width: none;
-		margin-bottom: 16px;
-	}
-
-	.render-the-video :global(.download-btn) {
-		width: 100%;
-		max-width: none;
-		margin-top: 16px;
-	}
-
-	.video-container {
-		width: 100%;
-		height: 400px;
+		height: 100%;
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+	}
+
+	.render-the-video :global(.rendering-status) {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
 		align-items: center;
+		justify-content: center;
+	}
+
+	.step-buttons {
+		margin-top: 16px;
+		width: 100%;
+		height: 64px;
+	}
+
+	.step-buttons :global(.bx--btn) {
+		height: calc(100% - 2px);
+		width: calc(50% - 4px);
+		max-width: none;
 	}
 </style>
