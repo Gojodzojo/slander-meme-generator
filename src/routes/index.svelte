@@ -7,7 +7,8 @@
 	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
 	import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { onMount } from 'svelte';
-	import { currentStep, Step } from "../stores/stepStore"
+	import { currentStep, Step } from '../stores/stepStore';
+	import DownloadTheVideo from '../components/DownloadTheVideo/DownloadTheVideo.svelte';
 
 	const ffmpeg = createFFmpeg({ log: true });
 	let isFFmpegLoaded = false;
@@ -43,11 +44,13 @@
 	<div class="step-container">
 		<Tile class="step">
 			{#if $currentStep === Step.EditScenes}
-				<EditScenes  />
+				<EditScenes />
 			{:else if $currentStep === Step.AdjustSettings}
 				<AdjustSettings />
-			{:else}
+			{:else if $currentStep === Step.RenderTheVideo}
 				<RenderTheVideo {ffmpeg} {isFFmpegLoaded} />
+			{:else}
+				<DownloadTheVideo />
 			{/if}
 		</Tile>
 	</div>

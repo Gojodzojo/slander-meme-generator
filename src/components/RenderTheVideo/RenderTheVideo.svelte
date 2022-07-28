@@ -7,11 +7,11 @@
 	import { musicSettings } from '../../stores/musicSettingsStore';
 	import StepHeader from '../StepHeader.svelte';
 	import { currentStep, Step } from '../../stores/stepStore';
+	import { videoSrc } from '../../stores/videoSrcStore';
 
 	export let ffmpeg: FFmpeg;
 	export let isFFmpegLoaded: boolean;
 
-	let videoSrc = '';
 	let isRendering = false;
 	let percent = 0;
 
@@ -30,8 +30,7 @@
 	}
 
 	async function render() {
-		if (!isFFmpegLoaded && $filmSettings.outputFileName !== '' && $scenes.length !== 0)
-			return;
+		if (!isFFmpegLoaded && $filmSettings.outputFileName !== '' && $scenes.length !== 0) return;
 		isRendering = true;
 		percent = 0;
 
@@ -40,17 +39,7 @@
 		let concatTracks = new Array<string>($scenes.length);
 
 		const videoWritePromises = $scenes.map(
-			async (
-				{
-					video,
-					startTime,
-					endTime,
-					speed,
-					bottomTextSettings,
-					topTextSettings
-				},
-				index
-			) => {
+			async ({ video, startTime, endTime, speed, bottomTextSettings, topTextSettings }, index) => {
 				const videoFile = await getVideoFile(video);
 				const fileExtension = videoFile.name.split('.').pop()!;
 				const newFileName = `${index}.${fileExtension}`;
@@ -64,9 +53,7 @@
 			setsar=1/1,
 			drawtext=fontfile=impact.ttf:text='${bottomTextSettings.text}':fontcolor=white:fontsize=${
 					bottomTextSettings.fontSize
-				}:borderw=5:x=(w-text_w)/2:y=(h-text_h) - ${
-					bottomTextSettings.fontSize / 2
-				},
+				}:borderw=5:x=(w-text_w)/2:y=(h-text_h) - ${bottomTextSettings.fontSize / 2},
 			drawtext=fontfile=impact.ttf:text='${topTextSettings.text}':fontcolor=white:fontsize=${
 					topTextSettings.fontSize
 				}:borderw=5:x=(w-text_w)/2:y=${topTextSettings.fontSize / 2},
@@ -99,7 +86,7 @@
 			fullOutputFileName
 		);
 		const data = ffmpeg.FS('readFile', fullOutputFileName);
-		videoSrc = URL.createObjectURL(
+		$videoSrc = URL.createObjectURL(
 			new Blob([data.buffer], { type: `video/${$filmSettings.outputFileFormat}` })
 		);
 		isRendering = false;
@@ -114,11 +101,11 @@
 			Loading FFmpeg
 		{:else if isRendering}
 			Rendering: {percent.toFixed(0)}%
-		{:else if videoSrc === ''}
+		{:else if $videoSrc === ''}
 			<Button on:click={render}>Start rendering</Button>
 		{:else}
-			<div style="margin: 16px;">Video rendered successfully!</div>
-			<Button style="margin: 16px;" on:click={render}>Render agin</Button>
+			<div class="render-success">Video rendered successfully!</div>
+			<Button class="render-success" on:click={render}>Render agin</Button>
 		{/if}
 	</Tile>
 
@@ -142,6 +129,10 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.render-the-video :global(.render-success) {
+		margin: 16px;
 	}
 
 	.step-buttons {
