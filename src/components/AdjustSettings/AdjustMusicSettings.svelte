@@ -3,22 +3,16 @@
 <script lang="ts">
 	import { Loading, NumberInput } from 'carbon-components-svelte';
 	import { getMusicFile } from '../../scripts/fileGetters';
-	import {
-		PREUPLOADED_MUSIC_FILES,
-		type PreuploadedMusicFilesType
-	} from '../../types/FilmData';
+	import { PREUPLOADED_MUSIC_FILES, musicSettings } from '../../stores/musicSettingsStore';
 	import MediaSelector, { MediaStatus } from '../MediaSelector.svelte';
 	import MusicPreview from './MusicPreview.svelte';
-
-	export let music: File | PreuploadedMusicFilesType;
-	export let musicSpeed: number;
 
 	let musicFileStatus: MediaStatus = MediaStatus.Ok;
 </script>
 
 <div class="music-settings">
 	<MediaSelector
-		bind:media={music}
+		bind:media={$musicSettings.music}
 		bind:status={musicFileStatus}
 		mediaType="music"
 		acceptedFileTypes={['audio/*']}
@@ -28,13 +22,13 @@
 		{#if musicFileStatus === MediaStatus.FileNotSelected}
 			Please select a file
 		{:else}
-			{#await getMusicFile(music)}
+			{#await getMusicFile($musicSettings.music)}
 				<Loading withOverlay={false} />
 			{:then musicFile}
 				<div style="width:100%; height: 100%;">
 					<MusicPreview {musicFile} />
 					<NumberInput
-						bind:value={musicSpeed}
+						bind:value={$musicSettings.speed}
 						label="Music speed"
 						step={0.1}
 						min={0.5}

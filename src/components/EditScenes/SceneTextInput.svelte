@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { TextInput, NumberInput } from 'carbon-components-svelte';
-	import type { TextSettings } from '../../types/FilmData';
 
 	export let fontSize: number;
 	export let text: string;

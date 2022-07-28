@@ -5,7 +5,7 @@
 		PREUPLOADED_VIDEO_FILES,
 		type PreuploadedVideoFilesType,
 		type TextSettings
-	} from '../../types/FilmData';
+	} from '../../stores/scenesStore';
 	import { Button, ExpandableTile, Loading, NumberInput } from 'carbon-components-svelte';
 	import VideoPreview from '../VideoPreview.svelte';
 	import SceneStartStopSelector from '../SceneStartStopSelector.svelte';

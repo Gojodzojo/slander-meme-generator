@@ -1,30 +1,27 @@
 <script lang="ts">
-	import { createDefaultScene, type Scene } from '../../types/FilmData';
+	import { createDefaultScene, scenes, type Scene } from '../../stores/scenesStore';
 	import ScenesListElement from './ScenesListElement.svelte';
 	import { Button } from 'carbon-components-svelte';
 	import StepHeader from '../StepHeader.svelte';
-	import { Step } from '../../routes/index.svelte';
-
-	export let scenes: Scene[];
-	export let setStep: (newStep: Step) => void;
+	import { currentStep, Step } from "../../stores/stepStore"
 
 	function addScene() {
-		scenes = [...scenes, createDefaultScene()];
+		$scenes = [...$scenes, createDefaultScene()];
 	}
 
 	function deleteScene(scene: Scene) {
-		return () => (scenes = scenes.filter((s) => s !== scene));
+		return () => ($scenes = $scenes.filter((s) => s !== scene));
 	}
 
 	function nextStep() {
-		setStep(Step.AdjustSettings);
+		$currentStep = Step.AdjustSettings
 	}
 </script>
 
 <div class="edit-scenes">
 	<StepHeader>Add and edit scenes</StepHeader>
 	<div class="scenes-list">
-		{#each scenes as scene, sceneIndex (scene)}
+		{#each $scenes as scene, sceneIndex (scene)}
 			<ScenesListElement
 				bind:video={scene.video}
 				bind:videoSpeed={scene.speed}
@@ -36,6 +33,7 @@
 				deleteScene={deleteScene(scene)}
 			/>
 		{/each}
+
 		<Button kind="secondary" class="full-width-button" on:click={addScene}>
 			Add scene
 		</Button>
@@ -57,7 +55,7 @@
 		height: 64px;
 	}
 
-	.edit-scenes :global(.scenes-list) {
+	.scenes-list {
 		flex-grow: 1;
 		overflow: auto;
 		margin-bottom: 16px;

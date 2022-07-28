@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { Button, Tile } from 'carbon-components-svelte';
-	import type { FilmData } from '../../types/FilmData';
 	import { type FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { getMusicFile, getVideoFile } from '../../scripts/fileGetters';
 	import VideoPreview from '../VideoPreview.svelte';
+	import { filmSettings } from '../../stores/filmSettingsStore';
+	import { scenes } from '../../stores/scenesStore';
+	import { musicSettings } from '../../stores/musicSettingsStore';
 
-	export let filmData: FilmData;
 	export let ffmpeg: FFmpeg;
 	export let isFFmpegLoaded: boolean;
 
@@ -20,24 +21,16 @@
 	});
 
 	async function render() {
-		const {
-			outputFileName,
-			outputFileFormat,
-			musicSettings,
-			scenes,
-			filmWidth,
-			filmHeight
-		} = filmData;
-
-		if (!isFFmpegLoaded && outputFileName !== '' && scenes.length !== 0) return;
+		if (!isFFmpegLoaded && $filmSettings.outputFileName !== '' && $scenes.length !== 0)
+			return;
 		isRendering = true;
 		percent = 0;
 
-		let inputFiles = new Array<string>(scenes.length * 2);
-		let filters = new Array<string>(scenes.length);
-		let concatTracks = new Array<string>(scenes.length);
+		let inputFiles = new Array<string>($scenes.length * 2);
+		let filters = new Array<string>($scenes.length);
+		let concatTracks = new Array<string>($scenes.length);
 
-		const videoWritePromises = scenes.map(
+		const videoWritePromises = $scenes.map(
 			async (
 				{
 					video,
@@ -57,8 +50,8 @@
 				inputFiles[index * 2 + 1] = newFileName;
 				concatTracks[index] = `[v${index}]`;
 				filters[index] = `[${index}:v]
-			scale=${filmWidth}:${filmHeight}:force_original_aspect_ratio=decrease,
-			pad=${filmWidth}:${filmHeight}:(ow-iw)/2:(oh-ih)/2,
+			scale=${$filmSettings.filmWidth}:${$filmSettings.filmHeight}:force_original_aspect_ratio=decrease,
+			pad=${$filmSettings.filmWidth}:${$filmSettings.filmHeight}:(ow-iw)/2:(oh-ih)/2,
 			setsar=1/1,
 			drawtext=fontfile=impact.ttf:text='${bottomTextSettings.text}':fontcolor=white:fontsize=${
 					bottomTextSettings.fontSize
@@ -74,21 +67,21 @@
 		);
 		await Promise.all(videoWritePromises);
 
-		const musicFile = await getMusicFile(musicSettings.music);
+		const musicFile = await getMusicFile($musicSettings.music);
 		const fileExtension = musicFile.name.split('.').pop()!;
 		const musicFileName = `m.${fileExtension}`;
 		ffmpeg.FS('writeFile', musicFileName, await fetchFile(musicFile));
 		inputFiles.push('-i', musicFileName);
 
-		const fullOutputFileName = `${outputFileName}.${outputFileFormat}`;
+		const fullOutputFileName = `${$filmSettings.outputFileName}.${$filmSettings.outputFileFormat}`;
 		await ffmpeg.run(
 			...inputFiles,
 			'-filter_complex',
 			`${filters.join(' ')}
 			${concatTracks.join('')}
-			concat=n=${filmData.scenes.length}:v=1:a=0 [v]`,
+			concat=n=${$scenes.length}:v=1:a=0 [v]`,
 			'-filter_complex',
-			`[${scenes.length}:a] atempo=${musicSettings.speed} [a]`,
+			`[${$scenes.length}:a] atempo=${$musicSettings.speed} [a]`,
 			'-map',
 			'[v]',
 			'-map',
@@ -98,7 +91,7 @@
 		);
 		const data = ffmpeg.FS('readFile', fullOutputFileName);
 		videoSrc = URL.createObjectURL(
-			new Blob([data.buffer], { type: `video/${outputFileFormat}` })
+			new Blob([data.buffer], { type: `video/${$filmSettings.outputFileFormat}` })
 		);
 		isRendering = false;
 	}
@@ -126,7 +119,7 @@
 			class="download-btn"
 			href={videoSrc}
 			disabled={isRendering || videoSrc === ''}
-			download="{filmData.outputFileName}.{filmData.outputFileFormat}"
+			download="{$filmSettings.outputFileName}.{$filmSettings.outputFileFormat}"
 		>
 			Download the video
 		</Button>

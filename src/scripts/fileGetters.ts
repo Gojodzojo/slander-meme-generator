@@ -1,4 +1,5 @@
-import type {  PreuploadedMusicFilesType, PreuploadedVideoFilesType } from "../types/FilmData"
+import type {PreuploadedMusicFilesType} from "../stores/musicSettingsStore";
+import type {PreuploadedVideoFilesType} from "../stores/scenesStore";
 
 async function getPreuploadedFile(preuploadedFileName: string, fileDirectory: string, fileExtension: string, fileType: string) {
     const fileName = `${preuploadedFileName.split(' ').join('_')}.${fileExtension}`;

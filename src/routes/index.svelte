@@ -1,21 +1,13 @@
-<script lang="ts" context="module">
-	export enum Step {
-		EditScenes,
-		AdjustSettings,
-		RenderTheVideo
-	}
-</script>
-
 <script lang="ts">
 	import 'carbon-components-svelte/css/g100.css';
 	import { ComposedModal, ModalBody, ModalHeader } from 'carbon-components-svelte';
 	import { Tile } from 'carbon-components-svelte';
-	import { createDefaultFilmData, type FilmData } from '../types/FilmData';
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
 	import AdjustSettings from '../components/AdjustSettings/AdjustSettings.svelte';
 	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
 	import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { onMount } from 'svelte';
+	import { currentStep, Step } from "../stores/stepStore"
 
 	const ffmpeg = createFFmpeg({ log: true });
 	let isFFmpegLoaded = false;
@@ -30,13 +22,6 @@
 			FFmpegLoadFailed = true;
 		}
 	});
-
-	let filmData: FilmData = createDefaultFilmData();
-	let currentStep: Step = Step.EditScenes;
-
-	function setStep(newStep: Step) {
-		currentStep = newStep;
-	}
 </script>
 
 <svelte:head>
@@ -57,19 +42,12 @@
 	<span class="title">Slander meme generator</span>
 	<div class="step-container">
 		<Tile class="step">
-			{#if currentStep === Step.EditScenes}
-				<EditScenes bind:scenes={filmData.scenes} {setStep} />
-			{:else if currentStep === Step.AdjustSettings}
-				<AdjustSettings
-					bind:fileName={filmData.outputFileName}
-					bind:outputFileFormat={filmData.outputFileFormat}
-					bind:musicSettings={filmData.musicSettings}
-					bind:filmWidth={filmData.filmWidth}
-					bind:filmHeight={filmData.filmHeight}
-					{setStep}
-				/>
+			{#if $currentStep === Step.EditScenes}
+				<EditScenes  />
+			{:else if $currentStep === Step.AdjustSettings}
+				<AdjustSettings />
 			{:else}
-				<RenderTheVideo {filmData} {ffmpeg} {isFFmpegLoaded} />
+				<RenderTheVideo {ffmpeg} {isFFmpegLoaded} />
 			{/if}
 		</Tile>
 	</div>
