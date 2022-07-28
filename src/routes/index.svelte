@@ -5,22 +5,21 @@
 	import EditScenes from '../components/EditScenes/EditScenes.svelte';
 	import AdjustSettings from '../components/AdjustSettings/AdjustSettings.svelte';
 	import RenderTheVideo from '../components/RenderTheVideo/RenderTheVideo.svelte';
-	import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 	import { onMount } from 'svelte';
 	import { currentStep, Step } from '../stores/stepStore';
 	import DownloadTheVideo from '../components/DownloadTheVideo/DownloadTheVideo.svelte';
+	import { Renderer } from '../scripts/renderer';
 
-	const ffmpeg = createFFmpeg({ log: true });
-	let isFFmpegLoaded = false;
-	let FFmpegLoadFailed = false;
+	let renderer = new Renderer();
+	let isRendererLoaded = false;
+	let rendererLoadFailed = false;
 
 	onMount(async () => {
 		try {
-			await ffmpeg.load();
-			ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
-			isFFmpegLoaded = true;
+			await renderer.load();
+			isRendererLoaded = true;
 		} catch {
-			FFmpegLoadFailed = true;
+			rendererLoadFailed = true;
 		}
 	});
 </script>
@@ -30,11 +29,11 @@
 </svelte:head>
 
 <main>
-	<ComposedModal preventCloseOnClickOutside class="load-failed-modal" open={FFmpegLoadFailed}>
+	<ComposedModal preventCloseOnClickOutside class="load-failed-modal" open={rendererLoadFailed}>
 		<ModalHeader title="App failed to load" />
 		<ModalBody>
-			Unfortunatelly your browser does not support the FFmpeg.wasm library which
-			is essential for this app to work.
+			Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for
+			this app to work.
 			<br />
 			Please try using other browser on a desktop computer.
 		</ModalBody>
@@ -48,7 +47,7 @@
 			{:else if $currentStep === Step.AdjustSettings}
 				<AdjustSettings />
 			{:else if $currentStep === Step.RenderTheVideo}
-				<RenderTheVideo {ffmpeg} {isFFmpegLoaded} />
+				<RenderTheVideo {renderer} {isRendererLoaded} />
 			{:else}
 				<DownloadTheVideo />
 			{/if}
