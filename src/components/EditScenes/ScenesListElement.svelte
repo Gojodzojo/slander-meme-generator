@@ -21,13 +21,16 @@
 	export let bottomTextSettings: TextSettings;
 	export let sceneNumber: number;
 	export let deleteScene: () => void;
+	export let hasError: boolean;
 
 	let videoFileStatus: MediaStatus = MediaStatus.Ok;
 </script>
 
 <div class="scene-list-element">
 	<ExpandableTile light on:click={() => {}}>
-		<div slot="above">Scene {sceneNumber}</div>
+		<div slot="above" style={hasError ? 'color: #fa4d56;' : ''}>
+			Scene {sceneNumber}
+		</div>
 		<div slot="below" class="below" on:click={(e) => e.stopPropagation()} title="">
 			<MediaSelector
 				bind:media={video}
@@ -44,22 +47,13 @@
 						<Loading withOverlay={false} />
 					{:then [videoFile, videoDuration]}
 						<div style="width: 100%; height: 100%;">
-							<VideoPreview
-								videoSrc={URL.createObjectURL(
-									videoFile
-								)}
-							/>
+							<VideoPreview videoSrc={URL.createObjectURL(videoFile)} />
 							<SceneStartStopSelector
 								bind:start={videoStartTime}
 								bind:end={videoEndTime}
 								duration={videoDuration}
 							/>
-							<NumberInput
-								bind:value={videoSpeed}
-								label="Video speed"
-								min={0.00001}
-								step={0.1}
-							/>
+							<NumberInput bind:value={videoSpeed} label="Video speed" min={0.00001} step={0.1} />
 							<SceneTextInput
 								bind:fontSize={topTextSettings.fontSize}
 								bind:text={topTextSettings.text}
@@ -79,9 +73,7 @@
 				{/if}
 			</div>
 			<div class="delete-scene-button-container">
-				<Button kind="danger-ghost" on:click={deleteScene}
-					>Delete scene</Button
-				>
+				<Button kind="danger-ghost" on:click={deleteScene}>Delete scene</Button>
 			</div>
 		</div>
 	</ExpandableTile>

@@ -1,34 +1,32 @@
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-import type {FilmSettings} from '../stores/filmSettingsStore';
-import type {MusicSettings} from '../stores/musicSettingsStore';
-import type {Scene} from '../stores/scenesStore';
-import {getMusicFile, getVideoFile} from './fileGetters';
+import type { FilmSettings } from '../stores/filmSettingsStore';
+import type { MusicSettings } from '../stores/musicSettingsStore';
+import type { Scene } from '../stores/scenesStore';
+import { getMusicFile, getVideoFile } from './fileGetters';
 
 export class Renderer {
 	ffmpeg = createFFmpeg({ log: true });
 
-  constructor(){}
+	async load() {
+		await this.ffmpeg.load();
+		this.ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
+	}
 
-  async load() {
-			await this.ffmpeg.load();
-			this.ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
-  }
+	setProgress(callback: (d: { ratio: number }) => void) {
+		this.ffmpeg.setProgress(callback);
+	}
 
-  setProgress(callback: (d: {ratio: number}) => void) {
-    this.ffmpeg.setProgress(callback)
-  }
+	async render(scenes: Scene[], filmSettings: FilmSettings, musicSettings: MusicSettings) {
+		const { filmWidth, filmHeight, outputFileFormat } = filmSettings;
 
-  async render(scenes: Scene[], filmSettings: FilmSettings, musicSettings: MusicSettings) {
-    const { filmWidth, filmHeight, outputFileFormat } = filmSettings
-
-		let inputFiles = new Array<string>(scenes.length * 2);
-		let filters = new Array<string>(scenes.length);
-		let concatTracks = new Array<string>(scenes.length);
+		const inputFiles = new Array<string>(scenes.length * 2);
+		const filters = new Array<string>(scenes.length);
+		const concatTracks = new Array<string>(scenes.length);
 
 		const videoWritePromises = scenes.map(
 			async ({ video, startTime, endTime, speed, bottomTextSettings, topTextSettings }, index) => {
 				const videoFile = await getVideoFile(video);
-				const fileExtension = videoFile.name.split('.').pop()!;
+				const fileExtension = videoFile.name.split('.').pop();
 				const newFileName = `${index}.${fileExtension}`;
 				this.ffmpeg.FS('writeFile', newFileName, await fetchFile(videoFile));
 				inputFiles[index * 2] = '-i';
@@ -51,7 +49,7 @@ export class Renderer {
 		await Promise.all(videoWritePromises);
 
 		const musicFile = await getMusicFile(musicSettings.music);
-		const fileExtension = musicFile.name.split('.').pop()!;
+		const fileExtension = musicFile.name.split('.').pop();
 		const musicFileName = `m.${fileExtension}`;
 		this.ffmpeg.FS('writeFile', musicFileName, await fetchFile(musicFile));
 		inputFiles.push('-i', musicFileName);
@@ -75,8 +73,6 @@ export class Renderer {
 
 		const data = this.ffmpeg.FS('readFile', fullOutputFileName);
 
-		return URL.createObjectURL(
-			new Blob([data.buffer], { type: `video/${outputFileFormat}` })
-		);
+		return URL.createObjectURL(new Blob([data.buffer], { type: `video/${outputFileFormat}` }));
 	}
 }

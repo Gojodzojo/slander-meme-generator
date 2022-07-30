@@ -3,7 +3,13 @@
 	import ScenesListElement from './ScenesListElement.svelte';
 	import { Button } from 'carbon-components-svelte';
 	import StepHeader from '../StepHeader.svelte';
-	import { currentStep, Step } from "../../stores/stepStore"
+	import { currentStep, Step } from '../../stores/stepStore';
+
+  $: validScenes = $scenes.map(({speed, startTime, endTime}) => {
+    return speed !== null && speed !== 0 && startTime !== null && endTime !== null
+  })
+  $: areAllScenesValid = !validScenes.some(s => !s)
+	$: canGoToNextStep = $scenes.length !== 0 && areAllScenesValid;
 
 	function addScene() {
 		$scenes = [...$scenes, createDefaultScene()];
@@ -14,7 +20,7 @@
 	}
 
 	function nextStep() {
-		$currentStep = Step.AdjustSettings
+		$currentStep = Step.AdjustSettings;
 	}
 </script>
 
@@ -31,14 +37,13 @@
 				bind:bottomTextSettings={scene.bottomTextSettings}
 				sceneNumber={sceneIndex + 1}
 				deleteScene={deleteScene(scene)}
+        hasError={!validScenes[sceneIndex]}
 			/>
 		{/each}
 
-		<Button kind="secondary" class="full-width-button" on:click={addScene}>
-			Add scene
-		</Button>
+		<Button kind="secondary" class="full-width-button" on:click={addScene}>Add scene</Button>
 	</div>
-	<Button class="full-width-button" on:click={nextStep}>Next</Button>
+	<Button class="full-width-button" on:click={nextStep} disabled={!canGoToNextStep}>Next</Button>
 </div>
 
 <style>
