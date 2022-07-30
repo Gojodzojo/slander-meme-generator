@@ -14,7 +14,7 @@
 	let isRendering = false;
 	let percent = 0;
 
-	$: canRender = isRendererLoaded && $filmSettings.outputFileName !== '' && $scenes.length !== 0;
+  $:canGoToNextStep = $videoSrc !== '' 
 
 	renderer.setProgress(({ ratio }) => {
 		if (ratio > 0) {
@@ -48,16 +48,16 @@
 		{:else if isRendering}
 			Rendering: {percent.toFixed(0)}%
 		{:else if $videoSrc === ''}
-			<Button on:click={render} disabled={!canRender}>Start rendering</Button>
+			<Button on:click={render}>Start rendering</Button>
 		{:else}
 			<div class="render-success">Video rendered successfully!</div>
-			<Button class="render-success" on:click={render} disabled={!canRender}>Render agin</Button>
+			<Button class="render-success" on:click={render}>Render agin</Button>
 		{/if}
 	</Tile>
 
 	<div class="step-buttons">
 		<Button kind="secondary" on:click={previousStep}>Go back</Button>
-		<Button on:click={nextStep}>Next step</Button>
+		<Button disabled={!canGoToNextStep} on:click={nextStep}>Next step</Button>
 	</div>
 </div>
 
