@@ -4,6 +4,17 @@
 	import StepHeader from '../StepHeader.svelte';
 	import { currentStep, Step } from '../../stores/stepStore';
 	import AdjustFilmSettings from './AdjustFilmSettings.svelte';
+	import { filmSettings } from '../../stores/filmSettingsStore';
+	import { musicSettings } from '../../stores/musicSettingsStore';
+
+	$: canGoToNextStep =
+		$filmSettings.filmWidth !== null &&
+		$filmSettings.filmWidth > 0 &&
+		$filmSettings.filmHeight !== null &&
+		$filmSettings.filmHeight > 0 &&
+		$musicSettings.speed !== null &&
+		$musicSettings.speed > 0 &&
+		$filmSettings.outputFileName !== '';
 
 	function previousStep() {
 		$currentStep = Step.EditScenes;
@@ -16,13 +27,15 @@
 
 <div class="adjust-settings">
 	<StepHeader>Adjust video settings</StepHeader>
+
 	<Tile light class="settings-container">
 		<AdjustFilmSettings />
 		<AdjustMusicSettings />
 	</Tile>
+
 	<div class="step-buttons">
 		<Button kind="secondary" on:click={previousStep}>Go back</Button>
-		<Button on:click={nextStep}>Next step</Button>
+		<Button disabled={!canGoToNextStep} on:click={nextStep}>Next step</Button>
 	</div>
 </div>
 

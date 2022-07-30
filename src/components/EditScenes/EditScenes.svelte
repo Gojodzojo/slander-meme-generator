@@ -6,7 +6,7 @@
 	import { currentStep, Step } from '../../stores/stepStore';
 
   $: validScenes = $scenes.map(({speed, startTime, endTime}) => {
-    return speed !== null && speed !== 0 && startTime !== null && endTime !== null
+    return speed !== null && speed > 0 && startTime !== null && endTime !== null
   })
   $: areAllScenesValid = !validScenes.some(s => !s)
 	$: canGoToNextStep = $scenes.length !== 0 && areAllScenesValid;

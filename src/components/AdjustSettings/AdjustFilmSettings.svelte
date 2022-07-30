@@ -8,6 +8,7 @@
 	labelText="File name"
 	placeholder="Enter file name..."
 	class="file-name-input"
+  invalid={!$filmSettings.outputFileName}
 />
 
 <Select bind:selected={$filmSettings.outputFileFormat} labelText="File extension">
