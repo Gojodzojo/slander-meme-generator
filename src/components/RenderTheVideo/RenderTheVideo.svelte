@@ -14,7 +14,7 @@
 	let isRendering = false;
 	let percent = 0;
 
-  $:canGoToNextStep = $videoSrc !== '' 
+	$: canGoToNextStep = $videoSrc !== '';
 
 	renderer.setProgress(({ ratio }) => {
 		if (ratio > 0) {
@@ -89,7 +89,7 @@
 
 	.step-buttons :global(.bx--btn) {
 		height: calc(100% - 2px);
-		width: calc(50% - 4px);
+		width: calc(50% - 2px);
 		max-width: none;
 	}
 </style>

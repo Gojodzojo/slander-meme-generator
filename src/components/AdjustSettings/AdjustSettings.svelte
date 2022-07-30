@@ -72,7 +72,7 @@
 
 	.step-buttons :global(.bx--btn) {
 		height: calc(100% - 2px);
-		width: calc(50% - 4px);
+		width: calc(50% - 2px);
 		max-width: none;
 	}
 </style>
