@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
 	import { Loading, NumberInput } from 'carbon-components-svelte';
 	import { getMusicFile } from '../../scripts/fileGetters';
