@@ -93,7 +93,6 @@
 	.below {
 		padding-bottom: 30px;
 		padding-top: 16px;
-		height: 1242px;
 		cursor: default;
 	}
 
@@ -106,6 +105,7 @@
 
 	.scene-controls {
 		width: 100%;
+		height: 1036px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
