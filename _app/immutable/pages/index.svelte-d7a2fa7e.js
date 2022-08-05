@@ -14,6 +14,7 @@ import{S as Bt,i as It,s as Pt,l as Ot,g as z,E as ut,d as g,K as wt,C as xt,L a
 			setsar=1/1,
 			drawtext=fontfile=impact.ttf:text='${T.text}':fontcolor=white:fontsize=${T.fontSize}:borderw=${T.borderWidth}:x=(w-text_w)/2:y=(h-text_h) - ${T.fontSize/2},
 			drawtext=fontfile=impact.ttf:text='${U.text}':fontcolor=white:fontsize=${U.fontSize}:borderw=${U.borderWidth}:x=(w-text_w)/2:y=${U.fontSize/2},
+			drawtext=fontfile=impact.ttf:text='gojodzojo.github.io/slander-meme-generator':fontsize=10 * (${t.filmHeight} / 480):fontcolor=black:box=1:boxcolor=white@0.5:boxborderw=2:x=w-text_w - 2:y=h-text_h - 2,
 			trim=${h}:${M},
 			setpts=${1/B}*(PTS-STARTPTS)[v${D}];`});await Promise.all(x);const c=await uo(i.music),u=`m.${c.name.split(".").pop()}`;this.ffmpeg.FS("writeFile",u,await qe.fetchFile(c)),l.push("-i",u);const d=`${Math.random()}.${r}`;await this.ffmpeg.run(...l,"-filter_complex",`${b.join(" ")}
 			${s.join("")}
