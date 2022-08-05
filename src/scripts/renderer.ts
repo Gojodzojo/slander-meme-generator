@@ -28,10 +28,13 @@ export class Renderer {
 				const videoFile = await getVideoFile(video);
 				const fileExtension = videoFile.name.split('.').pop();
 				const newFileName = `${index}.${fileExtension}`;
+
 				this.ffmpeg.FS('writeFile', newFileName, await fetchFile(videoFile));
+        
 				inputFiles[index * 2] = '-i';
 				inputFiles[index * 2 + 1] = newFileName;
 				concatTracks[index] = `[v${index}]`;
+
 				filters[index] = `[${index}:v]
 			scale=${filmWidth}:${filmSettings.filmHeight}:force_original_aspect_ratio=decrease,
 			pad=${filmWidth}:${filmHeight}:(ow-iw)/2:(oh-ih)/2,
@@ -44,10 +47,12 @@ export class Renderer {
 			drawtext=fontfile=impact.ttf:text='${topTextSettings.text}':fontcolor=white:fontsize=${
 					topTextSettings.fontSize
 				}:borderw=${topTextSettings.borderWidth}:x=(w-text_w)/2:y=${topTextSettings.fontSize / 2},
+			drawtext=fontfile=impact.ttf:text='gojodzojo.github.io/slander-meme-generator':fontsize=10 * (${filmSettings.filmHeight} / 480):fontcolor=black:box=1:boxcolor=white@0.5:boxborderw=2:x=w-text_w - 2:y=h-text_h - 2,
 			trim=${startTime}:${endTime},
 			setpts=${1 / speed}*(PTS-STARTPTS)[v${index}];`;
 			}
 		);
+
 		await Promise.all(videoWritePromises);
 
 		const musicFile = await getMusicFile(musicSettings.music);
