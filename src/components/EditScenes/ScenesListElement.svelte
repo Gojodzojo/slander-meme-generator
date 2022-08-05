@@ -57,12 +57,14 @@
 							<SceneTextInput
 								bind:fontSize={topTextSettings.fontSize}
 								bind:text={topTextSettings.text}
+								bind:borderWidth={topTextSettings.borderWidth}
 								labelText="Top text"
 								placeholder="Enter top text..."
 							/>
 							<SceneTextInput
 								bind:fontSize={bottomTextSettings.fontSize}
 								bind:text={bottomTextSettings.text}
+								bind:borderWidth={bottomTextSettings.borderWidth}
 								labelText="Bottom text"
 								placeholder="Enter bottom text..."
 							/>
@@ -84,9 +86,14 @@
 		margin-bottom: 16px;
 	}
 
+	.scene-list-element :global(.bx--form-item) {
+		margin-bottom: 16px;
+	}
+
 	.below {
 		padding-bottom: 30px;
 		padding-top: 16px;
+		height: 1242px;
 		cursor: default;
 	}
 
@@ -99,7 +106,6 @@
 
 	.scene-controls {
 		width: 100%;
-		height: 700px;
 		display: flex;
 		justify-content: center;
 		align-items: center;

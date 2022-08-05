@@ -33,6 +33,7 @@
 	async function render() {
 		isRendering = true;
 		percent = 0;
+    $videoSrc = ""
 
 		$videoSrc = await renderer.render($scenes, $filmSettings, $musicSettings);
 		isRendering = false;

@@ -25,7 +25,7 @@
 </script>
 
 <div class="edit-scenes">
-	<StepHeader>Add and edit scenes</StepHeader>
+	<StepHeader>Ad and edit scenes</StepHeader>
 	<div class="scenes-list">
 		{#each $scenes as scene, sceneIndex (scene)}
 			<ScenesListElement

@@ -5,23 +5,18 @@
 	export let text: string;
 	export let labelText: string;
 	export let placeholder: string;
+  export let borderWidth: number
 </script>
 
 <div class="scene-text-input">
 	<TextInput bind:value={text} {labelText} {placeholder} />
-	<div class="font-size-input-container">
-		<NumberInput label="Font size" bind:value={fontSize} min={1} />
-	</div>
+	<NumberInput label="{labelText} font size" bind:value={fontSize} min={1} />
+	<NumberInput label="{labelText} border width" bind:value={borderWidth} min={1} />
 </div>
 
 <style>
-	.scene-text-input {
-		display: flex;
+	/*.scene-text-input {
 		margin-top: 16px;
 	}
-
-	.font-size-input-container {
-		margin-left: 16px;
-		width: 170px;
-	}
+  */
 </style>
