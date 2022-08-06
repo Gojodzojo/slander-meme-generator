@@ -6,21 +6,39 @@
 	import StepHeader from '../StepHeader.svelte';
 	import { currentStep, Step } from '../../stores/stepStore';
 	import { videoSrc } from '../../stores/videoSrcStore';
-	import type { Renderer } from '../../scripts/renderer';
+	import type { ProgressCallbackType, Renderer } from '../../scripts/renderer';
+	import { onDestroy } from 'svelte';
 
 	export let renderer: Renderer;
 	export let isRendererLoaded: boolean;
 
 	let isRendering = false;
 	let percent = 0;
+	let remainingRenderingTime = 0;
 
 	$: canGoToNextStep = $videoSrc !== '';
 
-	renderer.setProgress(({ ratio }) => {
-		if (ratio > 0) {
-			percent = ratio * 100;
+	const onProgress: ProgressCallbackType = (p) => {
+		percent = p.percent;
+		remainingRenderingTime = p.remainingRenderingTime;
+	};
+
+	renderer.setProgress(onProgress);
+	onDestroy(() => renderer.unsetProgress(onProgress));
+
+	function msToTime(s: number) {
+		function pad(n: number) {
+			return ('00' + n).slice(-2);
 		}
-	});
+
+		const ms = s % 1000;
+		s = (s - ms) / 1000;
+		const secs = s % 60;
+		s = (s - secs) / 60;
+		const mins = s;
+
+		return pad(mins) + ':' + pad(secs);
+	}
 
 	function previousStep() {
 		$currentStep = Step.AdjustSettings;
@@ -33,7 +51,7 @@
 	async function render() {
 		isRendering = true;
 		percent = 0;
-    $videoSrc = ""
+		$videoSrc = '';
 
 		$videoSrc = await renderer.render($scenes, $filmSettings, $musicSettings);
 		isRendering = false;
@@ -47,7 +65,10 @@
 		{#if !isRendererLoaded}
 			Loading FFmpeg
 		{:else if isRendering}
-			Rendering: {percent.toFixed(0)}%
+			Rendering: {Math.floor(percent)}%
+      <br>
+      <br>
+      Remaining time: {msToTime(remainingRenderingTime)}
 		{:else if $videoSrc === ''}
 			<Button on:click={render}>Start rendering</Button>
 		{:else}

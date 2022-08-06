@@ -1,22 +1,69 @@
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { createFFmpeg, fetchFile, type LogCallback } from '@ffmpeg/ffmpeg';
 import type { FilmSettings } from '../stores/filmSettingsStore';
 import type { MusicSettings } from '../stores/musicSettingsStore';
 import type { Scene } from '../stores/scenesStore';
 import { getMusicFile, getVideoFile } from './fileGetters';
+import { dev } from '$app/env';
+
+export type ProgressCallbackType = (p: { percent: number; remainingRenderingTime: number }) => void;
 
 export class Renderer {
-	ffmpeg = createFFmpeg({ log: true });
+	private startTime = 0;
+	private estimatedVideoDuration = 0;
+	private progressCallbacks: ProgressCallbackType[] = [];
+
+	private logger: LogCallback = ({ message }) => {
+		const timeStringRegex = /(?<=time=).*?(?= )/g;
+		const result = timeStringRegex.exec(message);
+
+		if (result === null) return;
+
+		const [hours, minutes, seconds, miliseconds] = result[0].split(/:|\./g).map((r) => parseInt(r));
+		const currentMsTime = miliseconds + 100 * (seconds + 60 * (minutes + 60 * hours));
+
+		let percent = (currentMsTime / this.estimatedVideoDuration) * 100;
+		if (percent >= 100) {
+			percent = 99;
+		} else if (percent < 0) {
+			percent = 0;
+		}
+
+		let remainingRenderingTime = 0;
+
+		if (percent > 0) {
+			const timeElapsed = Date.now() - this.startTime;
+			const msPerPercent = timeElapsed / percent;
+			const fullRenderingTime = msPerPercent * 100;
+			remainingRenderingTime = fullRenderingTime - timeElapsed;
+		}
+
+		this.progressCallbacks.forEach((c) => c({ percent, remainingRenderingTime }));
+	};
+
+	private ffmpeg = createFFmpeg({
+		log: dev,
+		logger: this.logger
+	});
 
 	async load() {
 		await this.ffmpeg.load();
 		this.ffmpeg.FS('writeFile', 'impact.ttf', await fetchFile('./fonts/impact.ttf'));
 	}
 
-	setProgress(callback: (d: { ratio: number }) => void) {
-		this.ffmpeg.setProgress(callback);
+	setProgress(callback: ProgressCallbackType) {
+		this.progressCallbacks.push(callback);
+	}
+
+	unsetProgress(callback: ProgressCallbackType) {
+		this.progressCallbacks.filter((c) => c !== callback);
 	}
 
 	async render(scenes: Scene[], filmSettings: FilmSettings, musicSettings: MusicSettings) {
+		this.estimatedVideoDuration = scenes.reduce((prev: number, curr: Scene) => {
+			return prev + ((curr.endTime - curr.startTime) * 100) / curr.speed;
+		}, 0);
+		this.startTime = Date.now();
+
 		const { filmWidth, filmHeight, outputFileFormat } = filmSettings;
 
 		const inputFiles = new Array<string>(scenes.length * 2);
@@ -30,7 +77,7 @@ export class Renderer {
 				const newFileName = `${index}.${fileExtension}`;
 
 				this.ffmpeg.FS('writeFile', newFileName, await fetchFile(videoFile));
-        
+
 				inputFiles[index * 2] = '-i';
 				inputFiles[index * 2 + 1] = newFileName;
 				concatTracks[index] = `[v${index}]`;
@@ -47,7 +94,9 @@ export class Renderer {
 			drawtext=fontfile=impact.ttf:text='${topTextSettings.text}':fontcolor=white:fontsize=${
 					topTextSettings.fontSize
 				}:borderw=${topTextSettings.borderWidth}:x=(w-text_w)/2:y=${topTextSettings.fontSize / 2},
-			drawtext=fontfile=impact.ttf:text='gojodzojo.github.io/slander-meme-generator':fontsize=10 * (${filmSettings.filmHeight} / 480):fontcolor=black:box=1:boxcolor=white@0.5:boxborderw=2:x=w-text_w - 2:y=h-text_h - 2,
+			drawtext=fontfile=impact.ttf:text='gojodzojo.github.io/slander-meme-generator':fontsize=10 * (${
+				filmSettings.filmHeight
+			} / 480):fontcolor=black:box=1:boxcolor=white@0.5:boxborderw=2:x=w-text_w - 2:y=h-text_h - 2,
 			trim=${startTime}:${endTime},
 			setpts=${1 / speed}*(PTS-STARTPTS)[v${index}];`;
 			}
@@ -70,8 +119,8 @@ export class Renderer {
 			concat=n=${scenes.length}:v=1:a=0 [v]`,
 			'-filter_complex',
 			`[${scenes.length}:a] atempo=${musicSettings.speed} [a]`,
-      '-vsync',
-      'vfr',
+			'-vsync',
+			'vfr',
 			'-map',
 			'[v]',
 			'-map',
