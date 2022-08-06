@@ -70,6 +70,8 @@ export class Renderer {
 			concat=n=${scenes.length}:v=1:a=0 [v]`,
 			'-filter_complex',
 			`[${scenes.length}:a] atempo=${musicSettings.speed} [a]`,
+      '-vsync',
+      'vfr',
 			'-map',
 			'[v]',
 			'-map',
