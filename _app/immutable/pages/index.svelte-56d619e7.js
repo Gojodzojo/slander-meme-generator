@@ -18,7 +18,7 @@ import{S as Bt,i as It,s as Pt,l as Ot,g as z,E as ut,d as g,K as wt,C as xt,L a
 			trim=${h}:${M},
 			setpts=${1/B}*(PTS-STARTPTS)[v${D}];`});await Promise.all(x);const c=await uo(i.music),u=`m.${c.name.split(".").pop()}`;this.ffmpeg.FS("writeFile",u,await qe.fetchFile(c)),l.push("-i",u);const d=`${Math.random()}.${r}`;await this.ffmpeg.run(...l,"-filter_complex",`${b.join(" ")}
 			${s.join("")}
-			concat=n=${e.length}:v=1:a=0 [v]`,"-filter_complex",`[${e.length}:a] atempo=${i.speed} [a]`,"-map","[v]","-map","[a]","-shortest",d);const m=this.ffmpeg.FS("readFile",d);return URL.createObjectURL(new Blob([m.buffer],{type:`video/${r}`}))}}function zb(o){let e,t,i;return{c(){e=ct(`Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for
+			concat=n=${e.length}:v=1:a=0 [v]`,"-filter_complex",`[${e.length}:a] atempo=${i.speed} [a]`,"-vsync","vfr","-map","[v]","-map","[a]","-shortest",d);const m=this.ffmpeg.FS("readFile",d);return URL.createObjectURL(new Blob([m.buffer],{type:`video/${r}`}))}}function zb(o){let e,t,i;return{c(){e=ct(`Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for
 			this app to work.
 			`),t=H("br"),i=ct(`
 			Please try using other browser on a desktop computer.`)},l(n){e=dt(n,`Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for
