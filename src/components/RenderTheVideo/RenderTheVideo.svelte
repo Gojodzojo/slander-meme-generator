@@ -13,6 +13,7 @@
 	export let isRendererLoaded: boolean;
 
 	let isRendering = false;
+	let isError = false;
 	let percent = 0;
 	let remainingRenderingTime = 0;
 
@@ -50,10 +51,15 @@
 
 	async function render() {
 		isRendering = true;
+		isError = false;
 		percent = 0;
 		$videoSrc = '';
 
-		$videoSrc = await renderer.render($scenes, $filmSettings, $musicSettings);
+		try {
+			$videoSrc = await renderer.render($scenes, $filmSettings, $musicSettings);
+		} catch (err) {
+			isError = true;
+		}
 		isRendering = false;
 	}
 </script>
@@ -65,15 +71,16 @@
 		{#if !isRendererLoaded}
 			Loading FFmpeg
 		{:else if isRendering}
-			Rendering: {Math.floor(percent)}%
-      <br>
-      <br>
-      Remaining time: {msToTime(remainingRenderingTime)}
+			<div class="marg">Rendering: {Math.floor(percent)}%</div>
+			<div class="marg">Remaining time: {msToTime(remainingRenderingTime)}</div>
+		{:else if isError}
+			<div class="marg">An error occurred while rendering your video</div>
+			<Button class="marg" on:click={render}>Try agin</Button>
 		{:else if $videoSrc === ''}
 			<Button on:click={render}>Start rendering</Button>
 		{:else}
-			<div class="render-success">Video rendered successfully!</div>
-			<Button class="render-success" on:click={render}>Render agin</Button>
+			<div class="marg">Video rendered successfully!</div>
+			<Button class="marg" on:click={render}>Render agin</Button>
 		{/if}
 	</Tile>
 
@@ -99,7 +106,7 @@
 		justify-content: center;
 	}
 
-	.render-the-video :global(.render-success) {
+	.render-the-video :global(.marg) {
 		margin: 16px;
 	}
 
