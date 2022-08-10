@@ -4,10 +4,17 @@
 	import { scenes } from '../../stores/scenesStore';
 	import { musicSettings } from '../../stores/musicSettingsStore';
 	import StepHeader from '../StepHeader.svelte';
-	import { currentStep, Step } from '../../stores/stepStore';
+	import {
+		setStep,
+		Step,
+		transitionX,
+		TRANSITION_DURATION,
+		TRANSITION_IN_DELAY
+	} from '../../stores/stepStore';
 	import { videoSrc } from '../../stores/videoSrcStore';
 	import type { ProgressCallbackType, Renderer } from '../../scripts/renderer';
 	import { onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	export let renderer: Renderer;
 	export let isRendererLoaded: boolean;
@@ -42,11 +49,11 @@
 	}
 
 	function previousStep() {
-		$currentStep = Step.AdjustSettings;
+		setStep(Step.AdjustSettings);
 	}
 
 	function nextStep() {
-		$currentStep = Step.DownloadTheVideo;
+		setStep(Step.DownloadTheVideo);
 	}
 
 	async function render() {
@@ -64,7 +71,11 @@
 	}
 </script>
 
-<div class="render-the-video">
+<div
+	class="render-the-video"
+	in:fly={{ delay: TRANSITION_IN_DELAY, duration: TRANSITION_DURATION, x: -$transitionX }}
+	out:fly={{ duration: TRANSITION_DURATION, x: $transitionX }}
+>
 	<StepHeader>Render the video</StepHeader>
 
 	<Tile light class="rendering-status">

@@ -2,10 +2,17 @@
 	import { Button, Tile } from 'carbon-components-svelte';
 	import AdjustMusicSettings from './AdjustMusicSettings.svelte';
 	import StepHeader from '../StepHeader.svelte';
-	import { currentStep, Step } from '../../stores/stepStore';
+	import {
+		setStep,
+		Step,
+		transitionX,
+		TRANSITION_DURATION,
+		TRANSITION_IN_DELAY
+	} from '../../stores/stepStore';
 	import AdjustFilmSettings from './AdjustFilmSettings.svelte';
 	import { filmSettings } from '../../stores/filmSettingsStore';
 	import { musicSettings } from '../../stores/musicSettingsStore';
+	import { fly } from 'svelte/transition';
 
 	$: canGoToNextStep =
 		$filmSettings.filmWidth !== null &&
@@ -17,15 +24,19 @@
 		$filmSettings.outputFileName !== '';
 
 	function previousStep() {
-		$currentStep = Step.EditScenes;
+		setStep(Step.EditScenes);
 	}
 
 	function nextStep() {
-		$currentStep = Step.RenderTheVideo;
+		setStep(Step.RenderTheVideo);
 	}
 </script>
 
-<div class="adjust-settings">
+<div
+	class="adjust-settings"
+	in:fly={{ delay: TRANSITION_IN_DELAY, duration: TRANSITION_DURATION, x: -$transitionX }}
+	out:fly={{ duration: TRANSITION_DURATION, x: $transitionX }}
+>
 	<StepHeader>Adjust video settings</StepHeader>
 
 	<Tile light class="settings-container">

@@ -92,6 +92,7 @@
 		height: calc(100% - 40px);
 		width: calc(100% - 40px);
 		max-width: 900px;
+		overflow: hidden;
 	}
 
 	main :global(.load-failed-modal .bx--modal-close) {

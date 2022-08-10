@@ -2,15 +2,22 @@
 	import { Button, Tile } from 'carbon-components-svelte';
 	import { defaultMusicSettings, musicSettings } from '../../stores/musicSettingsStore';
 	import { scenes } from '../../stores/scenesStore';
-	import { currentStep, Step } from '../../stores/stepStore';
+	import {
+		setStep,
+		Step,
+		transitionX,
+		TRANSITION_DURATION,
+		TRANSITION_IN_DELAY
+	} from '../../stores/stepStore';
 	import { defaultFilmSettings, filmSettings } from '../../stores/filmSettingsStore';
 	import { videoSrc } from '../../stores/videoSrcStore';
 	import StepHeader from '../StepHeader.svelte';
+	import { fly } from 'svelte/transition';
 
 	$: outputFileName = $filmSettings.outputFileName + '.' + $filmSettings.outputFileFormat;
 
 	function previousStep() {
-		$currentStep = Step.RenderTheVideo;
+		setStep(Step.RenderTheVideo);
 	}
 
 	function statFromBeginning() {
@@ -18,11 +25,15 @@
 		$musicSettings = defaultMusicSettings();
 		$scenes = [];
 		$videoSrc = '';
-		$currentStep = Step.EditScenes;
+		setStep(Step.EditScenes);
 	}
 </script>
 
-<div class="download-the-video">
+<div
+	class="download-the-video"
+	in:fly={{ delay: TRANSITION_IN_DELAY, duration: TRANSITION_DURATION, x: -$transitionX }}
+	out:fly={{ duration: TRANSITION_DURATION, x: $transitionX }}
+>
 	<StepHeader>Download the video</StepHeader>
 
 	<Tile light class="actions">

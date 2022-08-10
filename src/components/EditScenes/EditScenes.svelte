@@ -3,12 +3,19 @@
 	import ScenesListElement from './ScenesListElement.svelte';
 	import { Button } from 'carbon-components-svelte';
 	import StepHeader from '../StepHeader.svelte';
-	import { currentStep, Step } from '../../stores/stepStore';
+	import {
+		setStep,
+		Step,
+		transitionX,
+		TRANSITION_DURATION,
+		TRANSITION_IN_DELAY
+	} from '../../stores/stepStore';
+	import { fly } from 'svelte/transition';
 
-  $: validScenes = $scenes.map(({speed, startTime, endTime}) => {
-    return speed !== null && speed > 0 && startTime !== null && endTime !== null
-  })
-  $: areAllScenesValid = !validScenes.some(s => !s)
+	$: validScenes = $scenes.map(({ speed, startTime, endTime }) => {
+		return speed !== null && speed > 0 && startTime !== null && endTime !== null;
+	});
+	$: areAllScenesValid = !validScenes.some((s) => !s);
 	$: canGoToNextStep = $scenes.length !== 0 && areAllScenesValid;
 
 	function addScene() {
@@ -20,11 +27,15 @@
 	}
 
 	function nextStep() {
-		$currentStep = Step.AdjustSettings;
+		setStep(Step.AdjustSettings);
 	}
 </script>
 
-<div class="edit-scenes">
+<div
+	class="edit-scenes"
+	in:fly={{ delay: TRANSITION_IN_DELAY, duration: TRANSITION_DURATION, x: -$transitionX }}
+	out:fly={{ duration: TRANSITION_DURATION, x: $transitionX }}
+>
 	<StepHeader>Add and edit scenes</StepHeader>
 	<div class="scenes-list">
 		{#each $scenes as scene, sceneIndex (scene)}
@@ -37,7 +48,7 @@
 				bind:bottomTextSettings={scene.bottomTextSettings}
 				sceneNumber={sceneIndex + 1}
 				deleteScene={deleteScene(scene)}
-        hasError={!validScenes[sceneIndex]}
+				hasError={!validScenes[sceneIndex]}
 			/>
 		{/each}
 
