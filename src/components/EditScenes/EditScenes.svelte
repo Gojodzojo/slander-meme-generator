@@ -12,9 +12,24 @@
 	} from '../../stores/stepStore';
 	import { fly } from 'svelte/transition';
 
-	$: validScenes = $scenes.map(({ speed, startTime, endTime }) => {
-		return speed !== null && speed > 0 && startTime !== null && endTime !== null;
-	});
+	$: validScenes = $scenes.map(
+		({ speed, startTime, endTime, topTextSettings, bottomTextSettings }) => {
+			return (
+				speed !== null &&
+				speed > 0 &&
+				startTime !== null &&
+				endTime !== null &&
+				topTextSettings.fontSize !== null &&
+				topTextSettings.fontSize > 0 &&
+				topTextSettings.borderWidth !== null &&
+				topTextSettings.borderWidth > 0 &&
+				bottomTextSettings.fontSize !== null &&
+				bottomTextSettings.fontSize > 0 &&
+				bottomTextSettings.borderWidth !== null &&
+				bottomTextSettings.borderWidth > 0
+			);
+		}
+	);
 	$: areAllScenesValid = !validScenes.some((s) => !s);
 	$: canGoToNextStep = $scenes.length !== 0 && areAllScenesValid;
 

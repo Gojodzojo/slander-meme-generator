@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
 	import {
 		PREUPLOADED_VIDEO_FILES,
