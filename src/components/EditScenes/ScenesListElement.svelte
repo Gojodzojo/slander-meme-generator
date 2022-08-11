@@ -4,12 +4,13 @@
 		type PreuploadedVideoFilesType,
 		type TextSettings
 	} from '../../stores/scenesStore';
-	import { Button, ExpandableTile, Loading, NumberInput } from 'carbon-components-svelte';
+	import { Button, Loading, NumberInput } from 'carbon-components-svelte';
 	import VideoPreview from '../VideoPreview.svelte';
 	import SceneStartStopSelector from '../SceneStartStopSelector.svelte';
 	import SceneTextInput from './SceneTextInput.svelte';
 	import MediaSelector, { MediaStatus } from '../MediaSelector.svelte';
 	import { getVideoAndDuration } from '../../scripts/fileGetters';
+	import CustomExpandableTile from '../CustomExpandableTile.svelte';
 
 	export let video: File | PreuploadedVideoFilesType;
 	export let videoSpeed: number;
@@ -25,7 +26,7 @@
 </script>
 
 <div class="scene-list-element">
-	<ExpandableTile light on:click={() => {}}>
+	<CustomExpandableTile light>
 		<div slot="above" style={hasError ? 'color: #fa4d56;' : ''}>
 			Scene {sceneNumber}
 		</div>
@@ -76,7 +77,7 @@
 				<Button kind="danger-ghost" on:click={deleteScene}>Delete scene</Button>
 			</div>
 		</div>
-	</ExpandableTile>
+	</CustomExpandableTile>
 </div>
 
 <style>
