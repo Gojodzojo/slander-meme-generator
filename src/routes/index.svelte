@@ -28,18 +28,29 @@
 	<title>Slander meme generator</title>
 </svelte:head>
 
-<main>
-	<ComposedModal preventCloseOnClickOutside class="load-failed-modal" open={rendererLoadFailed}>
-		<ModalHeader title="App failed to load" />
-		<ModalBody>
-			Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for
-			this app to work.
-			<br />
-			Please try using other browser on a desktop computer.
-		</ModalBody>
-	</ComposedModal>
+<ComposedModal preventCloseOnClickOutside class="load-failed-modal" open={rendererLoadFailed}>
+	<ModalHeader title="App failed to load" />
+	<ModalBody>
+		Unfortunatelly your browser does not support the FFmpeg.wasm library which is essential for this
+		app to work.
+		<br />
+		Please try using other browser on a desktop computer.
+	</ModalBody>
+</ComposedModal>
 
-	<span class="title">Slander meme generator</span>
+<main>
+	<div class="header">
+		<div class="title">Slander meme generator</div>
+
+		<a href="https://github.com/Gojodzojo/slander-meme-generator">
+			<img src="./icons/logo--github.svg" alt="Github logo" />
+		</a>
+
+		<a href="https://www.buymeacoffee.com/mateuszgoik">
+			<img src="./icons/cafe.svg" alt="Cafe icon" />
+		</a>
+	</div>
+
 	<div class="step-container">
 		<Tile class="step">
 			{#if $currentStep === Step.EditScenes}
@@ -72,11 +83,27 @@
 		align-items: center;
 	}
 
+	.header {
+		width: 100vw;
+		border-bottom: 1px solid #393939;
+		background-color: #161616;
+		padding: 15px;
+		display: flex;
+		font-size: 25px;
+	}
+
 	.title {
 		font-family: 'Playfair Display', serif;
-		font-size: 8vmin;
-		margin: 5vh 0;
-		display: block;
+		font-size: 1em;
+		margin-right: auto;
+	}
+
+	img {
+		height: 1em;
+	}
+
+	a {
+		margin: 0 7px;
 	}
 
 	.step-container {
@@ -89,7 +116,7 @@
 	}
 
 	main :global(.step) {
-		height: calc(100% - 40px);
+		height: calc(100% - 70px);
 		width: calc(100% - 40px);
 		max-width: 900px;
 		overflow: hidden;
