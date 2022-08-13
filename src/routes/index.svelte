@@ -9,6 +9,8 @@
 	import { currentStep, Step } from '../stores/stepStore';
 	import DownloadTheVideo from '../components/DownloadTheVideo/DownloadTheVideo.svelte';
 	import { Renderer } from '../scripts/renderer';
+	import githubIconSrc from '../icons/logo--github.svg?url';
+	import coffeeIconSrc from '../icons/cafe.svg?url';
 
 	let renderer = new Renderer();
 	let isRendererLoaded = false;
@@ -43,11 +45,11 @@
 		<div class="title">Slander meme generator</div>
 
 		<a href="https://github.com/Gojodzojo/slander-meme-generator">
-			<img src="./icons/logo--github.svg" alt="Github logo" />
+			<img src={githubIconSrc} alt="Github logo" />
 		</a>
 
 		<a href="https://www.buymeacoffee.com/mateuszgoik">
-			<img src="./icons/cafe.svg" alt="Cafe icon" />
+			<img src={coffeeIconSrc} alt="Cafe icon" />
 		</a>
 	</div>
 
